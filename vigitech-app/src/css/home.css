@@ -1,0 +1,314 @@
+/* Reset & tipografía */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #001538;
+  background-color: #f5f7fa;
+  overflow-x: hidden;
+}
+
+/* Header como card */
+.view-home header {
+  width: 100%;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  margin-bottom: -1.5rem;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+.view-home .header-img {
+  width: 120px;
+}
+.view-home nav button {
+  background-color: #002658;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+.view-home nav button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Hero: fondo + overlay como card */
+.view-home .hero {
+  position: relative;
+  background: url("/images/fondolab.png") center/cover no-repeat;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* cambio aquí */
+  overflow: hidden;
+  padding-left: 2rem; /* opcional: agrega un padding si quieres un margen desde la izquierda */
+  padding-bottom: 4rem; /* añade más espacio abajo */
+}
+
+.view-home .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  filter: blur(2px) brightness(0.7);
+  transform: scale(1.05);
+  z-index: 0;
+}
+.view-home .hero-overlay {
+  position: relative;
+  z-index: 1;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(4px);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  padding: 2rem;
+  max-width: 500px;
+  width: 80%;
+  text-align: left;
+}
+.view-home .hero-title {
+  font-size: 2.5rem;
+  color: #002658;
+  margin-bottom: 0.5rem;
+}
+.view-home .hero-text {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #001a33;
+}
+
+/* Sensores: sección y grid */
+.view-home .sensors {
+  padding: 3rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.view-home .section-title {
+  font-size: 1.8rem;
+  color: #002658;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.view-home .sensor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+  gap: 1.5rem;
+}
+
+/* Cards de sensor futuristas */
+.view-home .wave-card {
+  position: relative;
+  background: linear-gradient(135deg, #011b2c 0%, #00d4ff 100%);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  padding: 1.5rem 1rem 1rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+.view-home .wave-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(0, 212, 255, 0.4);
+  filter: brightness(1.1);
+}
+
+/* Nuevo: efecto glow detrás de icon-container */
+.view-home .icon-container {
+  position: relative;
+  z-index: 1;
+  padding: 0.6rem;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6), 0 0 40px rgba(0, 212, 255, 0.4);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.view-home .wave-card:hover .icon-container {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.8), 0 0 60px rgba(0, 212, 255, 0.5);
+}
+
+.view-home .icon-container img {
+  width: 50px;
+  height: 50px;
+}
+
+/* Título con subrayado gradiente */
+.view-home .card-title {
+  position: relative;
+  z-index: 1;
+  font-size: 1.25rem;
+  color: #fff;
+  margin: 0.3rem 0;
+}
+
+.view-home .card-title::after {
+  content: "";
+  display: block;
+  width: 50%;
+  height: 2px;
+  margin: 0.4rem auto 0;
+  background: linear-gradient(90deg, #00d4ff, #00a8c9);
+  border-radius: 1px;
+}
+
+/* Texto */
+.view-home .card-text {
+  position: relative;
+  z-index: 1;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+  color: #f0f8ff;
+  margin: 0.3rem 0 1rem;
+}
+
+/* Flecha (si la usas) */
+.view-home .card-arrow {
+  position: relative;
+  z-index: 1;
+  font-size: 1.5rem;
+  color: rgba(255,255,255,0.8);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.view-home .card-arrow:hover {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+
+/* Footer */
+.view-home footer {
+  max-width: 1000px;
+  margin: 3rem auto 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #d3dae3;
+  text-align: center;
+}
+.view-home .social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+.view-home .social-links img {
+  width: 28px; height: 28px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.view-home .social-links img:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+.view-home .footer-text {
+  font-size: 0.85rem;
+  color: #707582;
+}
+
+.view-home .about {
+  position: relative;
+  min-height: 60vh;
+  padding-bottom: 2rem;
+  overflow: hidden;
+  margin: 3rem 0;
+}
+
+
+
+
+.view-home .about-image {
+  position: absolute;
+  inset: 0;
+  background: url("../../public/images/fondolab.png") center/cover no-repeat;
+  filter: brightness(0.7);
+  z-index: 0;
+}
+
+.view-home .about-text-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: 0 2rem; /* ya no usa auto para centrar */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* nuevo */
+  text-align: left;        /* nuevo */
+  height: 100%;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+
+.view-home .about-title {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+.view-home .about-subtitle {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  
+}
+
+/* Párrafo */
+.view-home .hero-text {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+
+  .view-home .about-image {
+    display: none;
+  }
+
+  .view-home .about-text-wrapper {
+    margin: 0 1rem;
+    text-align: center;
+  }
+  /* ocultar fondo hero */
+  .view-home .hero {
+    background: none;
+  }
+  .view-home .hero::before { display: none; }
+  /* hero-overlay full width */
+  .view-home .hero-overlay {
+    width: 100%;
+    margin: 0 1rem;
+    padding: 1.5rem;
+    border-radius: 1.5rem 1.5rem 0 0;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+  }
+  /* grid a 1 columna */
+  .view-home .sensor-grid {
+    grid-template-columns: 1fr;
+  }
+  /* header más compacto */
+  .view-home header {
+    flex-direction: column;
+    gap: 1rem;
+    border-radius: 0;
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+  }
+}
+
+

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VigiTech – Dashboard</title>
+  <link rel="stylesheet" href="/src/css/dashboard.css">
+</head>
+<body class="view-dashboard">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <button id="btn-menu" class="hamburger-open">☰</button>
+      <img src="/images/Mask group.png" alt="VigiTech" class="header-logo">
+    </div>
+    <div class="header-right">
+      <span id="user-name">Usuario</span>
+      <button id="btn-user" class="user-icon">👤</button>
+      <ul id="dropdown-user" class="dropdown hidden">
+        <li><button id="logout">Cerrar sesión</button></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" class="sidebar">
+    <button id="btn-close" class="hamburger-close">✕</button>
+    <ul class="menu">
+      <li><a href="#/dashboard" id="ctrl-dashboard" class="active">Panel de control</a></li>
+      <hr>
+      <li class="has-sub">
+        <span id="toggle-sensors">Sensores ▾</span>
+        <ul class="sub-menu">
+          <li><a href="#/gas">Gas</a></li>
+          <li><a href="#/particle">Partículas</a></li>
+          <li><a href="#">Cámara y Movimiento</a></li>
+        </ul>
+      </li>
+      <hr>
+      <li><a href="#/configSensor">Configuración de sensores</a></li>
+    </ul>
+    <div class="support">
+      <a href="#"><span>🛠️</span> Soporte</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="dashboard-content">
+    <h1>Bienvenido, <span id="welcome-name">Usuario</span></h1>
+    <section class="status-sensors">
+      <h2>Estado de los sensores</h2>
+      <div class="cards">
+        <div class="card">Gas: —</div>
+        <div class="card">Partículas: —</div>
+        <div class="card">Movimiento: —</div>
+      </div>
+    </section>
+    <section class="camera-stream">
+      <h3>Transmisión de Cámara</h3>
+      <div class="camera-placeholder">Aquí irá la cámara en vivo</div>
+    </section>
+  </main>
+
+  <!-- Botón SOS -->
+  <button id="btn-sos" class="sos-button"><img src="/images/sos.png" alt="BotonSos"></button>
+  <div id="modal-sos" class="sos-modal hidden">
+    <div class="sos-content">
+      <h4>Emergencias</h4>
+      <div class="sos-cards">
+        <div class="sos-card">
+          <img class="icon-placeholder" src="/images/sirena.png"></img>
+          <p>Bomberos<br><strong>123</strong></p>
+        </div>
+        <div class="sos-card">
+          <img class="icon-placeholder" src="/images/poli.png"></img>
+          <p>Policía<br><strong>456</strong></p>
+        </div>
+        <div class="sos-card">
+          <img class="icon-placeholder" src="/images/ambulancia.png"></img>
+          <p>Ambulancia<br><strong>789</strong></p>
+        </div>
+      </div>
+      <button id="close-sos" class="close-sos">✕</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/js/views/dashboard.js"></script>
+  <script type="module" src="/src/js/router.js"></script>
+</body>
+</html>

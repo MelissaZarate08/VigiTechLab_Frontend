@@ -1,0 +1,41 @@
+<!-- src/views/adminDashboard.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VigiTech – Admin Dashboard</title>
+  <link rel="stylesheet" href="/src/css/dashboard.css" />
+  <link rel="stylesheet" href="/src/css/adminDashboard.css" />
+</head>
+<body class="view-dashboard">
+  <!-- HEADER simplificado -->
+  <header>
+    <div class="header-left">
+      <img src="/images/Mask group.png" alt="VigiTech" class="header-logo" />
+      <h2 style="margin-left:1rem;">Administración</h2>
+    </div>
+    <div class="header-right">
+      <span id="user-name">Admin</span>
+      <button id="logout" style="margin-left:1rem;">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="dashboard-content">
+    <h1>Usuarios registrados</h1>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Email</th>
+          <th>Rol</th><th>Estatus</th><th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="admin-table-body">
+        <!-- Filas generadas por JS -->
+      </tbody>
+    </table>
+  </main>
+
+  <script type="module" src="/src/js/views/adminDashboard.js"></script>
+</body>
+</html>

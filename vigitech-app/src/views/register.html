@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VigiTech - Registro</title>
+
+  <!-- Roboto desde Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="/src/css/register.css" />
+</head>
+
+<body>
+  <div class="register-wrapper">
+    <!-- Lado izquierdo: imagen -->
+    <div class="register-image"></div>
+
+    <!-- Lado derecho: card de registro -->
+    <div class="register-card">
+      <img
+        src="/images/logoOJO.png"
+        alt="Logo VigiTech"
+        class="register-logo"
+      />
+      <h2 class="register-title">Crea tu cuenta en VigiTech</h2>
+
+      <form id="register-form" class="register-form">
+        <label for="register-name">Nombre</label>
+        <input
+          type="text"
+          id="register-name"
+          placeholder="Tu nombre completo"
+          required
+        />
+
+        <label for="register-email">Correo</label>
+        <input
+          type="email"
+          id="register-email"
+          placeholder="tu@ejemplo.com"
+          required
+        />
+
+        <div class="two-col">
+          <div>
+            <label for="register-password">Contraseña</label>
+            <input
+              type="password"
+              id="register-password"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <div>
+            <label for="register-confirm-password">Repite contraseña</label>
+            <input
+              type="password"
+              id="register-confirm-password"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+        </div>
+
+        <label for="register-systemID">ID de Sistema</label>
+        <input
+          type="number"
+          id="register-systemID"
+          placeholder="00001"
+        />
+
+        <label for="register-role">Rol</label>
+        <select id="register-role" required>
+          <option value="">Selecciona tu rol</option>
+          <option value="user">Usuario</option>
+          <option value="admin">Administrador</option>
+        </select>
+
+        <button type="submit">Registrarse</button>
+      </form>
+
+      <p class="register-footer">
+        ¿Ya tienes cuenta?
+        <a href="#/login">Inicia sesión</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="module" src="/src/js/views/register.js"></script>
+  <script type="module" src="/src/js/router.js"></script>
+</body>
+</html>
