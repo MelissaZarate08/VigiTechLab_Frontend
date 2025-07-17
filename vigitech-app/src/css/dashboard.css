@@ -193,3 +193,13 @@ h4 {color: #002658;  margin-top: rem;
   background: none; border: none; font-size: 1.2rem;
   color: #6a0202; cursor: pointer;
 }
+
+.card strong {
+  display: block;
+  
+  font-size: 1.1rem;
+}
+
+.card br {
+  line-height: 2;
+}

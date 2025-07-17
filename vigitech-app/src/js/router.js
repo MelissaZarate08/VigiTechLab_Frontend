@@ -6,7 +6,10 @@ export const routes = {
   '#/dashboard': '/src/views/dashboard.html',
   '#/configSensor':  '/src/views/configSensor.html',
   '#/gas':          '/src/views/gasSensor.html',
-  '#/particle':     '/src/views/particleSensor.html'
+  '#/particle':     '/src/views/particleSensor.html',
+  '#/camMotion':    '/src/views/camMotionSensors.html',
+  '#/gasProbability':    '/src/views/gasSensor-Probability.html',
+
 };
 // en router.js
 export function navigateTo(hash, { replace = false } = {}) {

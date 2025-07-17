@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>VigiTech – Sensor de Gas</title>
-  <link rel="stylesheet" href="/src/css/gasSensor.css" />
+  <title>VigiTech – Cámara y Movimiento</title>
+  <link rel="stylesheet" href="/src/css/camMotionSensors.css" />
 </head>
 <body class="view-dashboard">
 
@@ -27,16 +27,16 @@
   <nav id="sidebar" class="sidebar">
     <button id="btn-close" class="hamburger-close">✕</button>
     <ul class="menu">
-      <li><a href="#/dashboard" id="ctrl-dashboard" class="active">Panel de control</a></li>
+      <li><a href="#/dashboard">Panel de control</a></li>
       <hr>
       <li class="has-sub">
-  <span id="toggle-sensors">Sensores ▾</span>
-  <ul class="sub-menu">
-    <li><a href="#/gas" id="ctrl-gas">Gas</a></li>
-    <li><a href="#/particle">Partículas</a></li>
-    <li><a href="#/camMotion">Cámara y Movimiento</a></li>
-  </ul>
-</li>
+        <span id="toggle-sensors">Sensores ▾</span>
+        <ul class="sub-menu">
+          <li><a href="#/gas">Gas</a></li>
+          <li><a href="#/particle">Partículas</a></li>
+          <li><a href="#/camMotion" class="active">Cámara y Movimiento</a></li>
+        </ul>
+      </li>
       <hr>
       <li><a href="#/configSensor">Configuración de sensores</a></li>
     </ul>
@@ -47,37 +47,45 @@
 
   <!-- MAIN CONTENT -->
   <main class="dashboard-content">
-    <h1 class="sensor-title">
-      Sensor de Gas <span class="sensor-model">(MQ-2)</span>
-      <span class="icon-tooltip">
-        <img src="/images/imagen.png" alt="Información" class="icon-img" />
-        <img src="/images/sensorgas.png" alt="MQ-2" class="tooltip-img"/>
-      </span>
-    </h1>
+    <div class="sensor-titles">
+      <h1 class="sensor-title">
+        Cámara <span class="sensor-model">(OV5647)</span>
+        <span class="icon-tooltip" tabindex="0">
+          <img src="/images/imagen.png" alt="Información" class="icon-img" />
+          <img src="/images/camsensor.png" alt="OV5647" class="tooltip-img"/>
+        </span>
+      </h1>
+      <h2 class="sensor-title">
+        Movimiento <span class="sensor-model">(PIR‑501)</span>
+        <span class="icon-tooltip" tabindex="0">
+          <img src="/images/imagen.png" alt="Información" class="icon-img" />
+          <img src="/images/motsensor.png" alt="PIR-501" class="tooltip-img"/>
+        </span>
+      </h2>
+      <!-- Botón galería movido aquí -->
+      <button id="btn-gallery" class="gallery-icon" title="Abrir galería"> <img src="/images/galeria.png" alt="Información" class="icon-img" /></button>
+    </div>
 
     <section class="monitoring">
       <h2>Monitoreo de Sensor</h2>
-
       <div class="view-toggle">
         <button id="btn-chart" class="active">Gráfica</button>
         <button id="btn-table">Tabla</button>
       </div>
-
       <div class="data-display">
         <div class="display-container">
-        <canvas id="gasChart"></canvas>
-        <table id="gasTable" class="hidden">
-  <thead>
-    <tr>
-      <th>Tiempo</th>
-      <th>LPG (ppm)</th>
-      <th>CO (ppm)</th>
-      <th>Smoke (ppm)</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-      </div>
+          <canvas id="camMotionChart"></canvas>
+          <table id="camMotionTable" class="hidden">
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>Detectado</th>
+                <th>Intensidad</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -85,7 +93,7 @@
       <h2>Datos en tiempo real</h2>
       <div class="rt-box">
         <p><strong>Hora:</strong> <span id="rt-hour">–</span></p>
-        <p><strong>Gas:</strong> <span id="rt-value">–</span> ppm</p>
+        <p><strong>Movimiento:</strong> <span id="rt-value">–</span></p>
       </div>
       <div class="actions">
         <button id="btn-stats">Ver probabilidades y estadísticas</button>
@@ -94,8 +102,8 @@
     </section>
   </main>
 
-  <!-- Botón SOS -->
-  <button id="btn-sos" class="sos-button"><img src="/images/sos.png" alt="BotonSos"></button>
+  <!-- SOS -->
+  <button id="btn-sos" class="sos-button"><img src="/images/sos.png" alt="SOS"/></button>
   <div id="modal-sos" class="sos-modal hidden">
     <div class="sos-content">
       <h4>Emergencias</h4>
@@ -116,9 +124,5 @@
       <button id="close-sos" class="close-sos">✕</button>
     </div>
   </div>
-
-  <!-- SCRIPTS -->
-  <script type="module" src="../js/views/gasSensor.js"></script>
-  <script type="module" src="../js/router.js"></script>
 </body>
 </html>

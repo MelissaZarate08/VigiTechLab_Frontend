@@ -8,6 +8,9 @@ const viewStyles = {
   '#/dashboard':  '/src/css/dashboard.css',
   '#/configSensor':'/src/css/configSensor.css',
   '#/gas':        '/src/css/gasSensor.css',
+  '#/particle':    '/src/css/particleSensor.css', 
+  '#/camMotion':    '/src/css/camMotionSensors.css',
+  '#/gasProbability':    '/src/css/gasSensor-Probability.css',
 };
 
 // Carga dinámica de CSS para la vista actual

@@ -1,6 +1,9 @@
 // src/js/views/dashboard.js
 
 import { navigateTo } from '../router.js';
+import {
+  initWebSocket
+} from '../../api/dashboardService.js';
 
 export function initDashboard() {
   // Abrir y cerrar menú
@@ -54,13 +57,51 @@ export function initDashboard() {
   btnSos.addEventListener('click', () => modalSos.classList.remove('hidden'));
   closeSos.addEventListener('click', () => modalSos.classList.add('hidden'));
 
-
-  // justo al final de initDashboard (después de montar todo lo demás)
-history.pushState(null, null, location.href);
-window.addEventListener('popstate', () => {
-  // cada intento de “atrás” te devuelve al mismo dashboard
+  // Mantener en dashboard al presionar atrás
   history.pushState(null, null, location.href);
-});
+  window.addEventListener('popstate', () => {
+    history.pushState(null, null, location.href);
+  });
 
+  // WebSocket en tiempo real: Actualizar las tarjetas del estado de sensores
+  initWebSocket((data) => {
+    console.log('Dato recibido por WebSocket:', data);
 
+    if (data.id?.startsWith('g-')) {
+      const gasCard = document.getElementById('gas-status');
+      if (gasCard) {
+        gasCard.innerHTML = `
+          <strong>Gas:</strong><br>
+          LPG: ${data.lpg}<br>
+          CO: ${data.co}<br>
+          Humo: ${data.smoke}
+          `; 
+      }
+    }
+
+    if (data.id?.startsWith('p-')) {
+      const particleCard = document.getElementById('particle-status');
+      if (particleCard) {
+        particleCard.innerHTML = `
+          <strong>Partículas:</strong><br>
+          PM1.0: ${data.pm1_0}<br>
+          PM2.5: ${data.pm2_5}<br>
+          PM10: ${data.pm10}
+        `;
+
+      }
+    }
+
+    if (data.id?.startsWith('motion')) {
+      const motionCard = document.getElementById('motion-status');
+      if (motionCard) {
+        motionCard.innerHTML = `
+          <strong>Movimiento:</strong><br>
+          Estado: ${data.motion_detected ? "Detectado" : "Sin movimiento"}<br>
+          Intensidad: ${data.intensity ?? '–'}
+        `;
+
+      }
+    }
+  });
 }

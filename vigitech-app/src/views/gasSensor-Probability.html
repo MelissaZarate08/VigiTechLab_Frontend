@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Probabilidad y Estadística - Sensor de Gas</title>
+  <link rel="stylesheet" href="gasSensor-Probability.css"/>
+</head>
+<body>
+  <main class="prob-container">
+    <h1 class="title">
+      Probabilidades y estadísticas de datos históricos <br/>
+      <span class="sensor-type">(Sensor de Gas)</span>
+    </h1>
+
+<div class="filter">
+  <label for="periodFilter">Filtrar por:</label>
+  <select id="periodFilter">
+    <option value="today">Hoy</option>
+    <option value="last7">Últimos 7 días</option>
+    <option value="month">Este mes</option>
+  </select>
+  <button id="downloadBtn" class="download-btn">Descargar PDF</button>
+</div>
+
+    <section class="results">
+      <div class="cards" id="stats-cards"></div>
+      <div class="charts" id="charts"></div>
+    </section>
+  </main>
+
+  <!-- Carga primero la librería global de Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Ahora carga tu script, con la ruta absoluta correcta -->
+  <script src="/src/js/views/gasSensor-Probability.js"></script>
+
+</body>
+</html>
