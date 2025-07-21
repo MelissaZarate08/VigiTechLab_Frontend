@@ -11,6 +11,9 @@ const viewStyles = {
   '#/particle':    '/src/css/particleSensor.css', 
   '#/camMotion':    '/src/css/camMotionSensors.css',
   '#/gasProbability':    '/src/css/gasSensor-Probability.css',
+  '#/particleProbability':    '/src/css/particleSensor-Probability.css',
+  '#/camMotionProbability':    '/src/css/camMotionSensors-Probability.css',
+  '#/galeria':    '/src/css/galeria.css',
 };
 
 // Carga dinámica de CSS para la vista actual

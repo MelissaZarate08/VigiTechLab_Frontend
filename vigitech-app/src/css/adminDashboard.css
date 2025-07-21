@@ -1,50 +1,111 @@
-/* src/css/adminDashboard.css */
+/* Reset y tipografía */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* Layout general */
-.view-dashboard {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #002658;
   background: #f5f7fa;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-.view-dashboard {
-  display: flex; min-height: 100vh; flex-direction: column;
-  background: #f5f7fa;
-}
-/* Header simplificado */
+/* HEADER */
 header {
+  position: fixed; top: 0; left: 0; right: 0;
   display: flex; justify-content: space-between; align-items: center;
-  background: #ffffff; padding: 0.8rem 1.5rem; border-bottom: 1px solid #d3dae3;
+  background: #ffffff;
+  padding: 0.8rem 1.5rem;
+  border-bottom: 1px solid #d3dae3;
+  z-index: 1000;
 }
-.header-left { display: flex; align-items: center; }
-.header-logo { height: 40px; }
-/* Oculta sidebar */
-.sidebar { display: none !important; }
-/* Contenido */
-.dashboard-content {
-  margin: 2rem; padding-top: 60px;
+.header-left {
+  display: flex; align-items: center; gap: 0.5rem;
 }
-.admin-table {
-  width: 100%; border-collapse: collapse;
-  background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.header-logo { height: 35px; }
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #002658;
 }
-.admin-table thead {
-  background: #031b58; color: #fff;
+.header-right {
+  display: flex; align-items: center; position: relative; gap: 0.5rem;
 }
-.admin-table th,
-.admin-table td {
-  padding: 0.75rem 1rem; text-align: left;
-  border-bottom: 1px solid #e0e0e0;
+.user-icon {
+  background: none; border: none;
+  font-size: 1.3rem; cursor: pointer;
 }
-.admin-table tr:hover {
-  background: #f0f4ff;
+.dropdown {
+  position: absolute; top: 2.8rem; right: 0;
+  background: #fff; border: 1px solid #ccc; border-radius: 25px;
+  list-style: none; width: 140px; overflow: hidden;
 }
-.status-btn {
-  padding: 0.3rem 0.6rem; border: none; border-radius: 4px;
+.dropdown li + li { border-top: 1px solid #e0e0e0; }
+.dropdown li button {
+  width: 100%; padding: 0.8rem;
+  background: none; border: none;
+  text-align: center; cursor: pointer;
+  border-radius: 0;
+  transition: background-color 0.2s ease;
+}
+.dropdown li button:hover { background: #f0f0f0; }
+.hidden { display: none; }
+
+
+/* SALUDO */
+.welcome-admin {
+  max-width: 900px;
+  margin: 80px auto 1.5rem; /* deja espacio tras el header */
+  margin-top: 7rem;
+}
+.welcome-admin h1 {
+  font-size: 1.75rem;
+  color: #002658;
+  margin-bottom: 0.25rem;
+}
+.welcome-admin h3 {
+  font-size: 1.25rem;
+  color: #375781;
+}
+
+
+/* MAIN */
+.view-admin-dashboard { padding-top: 70px; }
+.admin-content {
+  max-width: 900px; margin: 2rem auto;
+}
+.admin-content h2 {
+  font-size: 1.5rem; margin-bottom: 1rem;
+  color: #002658;
+}
+
+/* TABLA */
+.table-wrapper {
+  background: #fff;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.table-header {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #BAD8FF;
+}
+.cell.header {
+  padding: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+#users-container .row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid #e2e8f0;
+}
+#users-container .cell {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+.toggle-btn {
+  padding: 0.5rem 1rem;
+  border: none; border-radius: 1.5rem;
+  background: #002658; color: #fff;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
-.status-btn.active { background: #28a745; color: #fff; }
-.status-btn.inactive { background: #dc3545; color: #fff; }
+.toggle-btn:hover { opacity: 0.9; }

@@ -1,31 +1,37 @@
 // src/api/adminService.js
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = 'http://localhost:8080/api'; // coincide con logeoService
 
-// Recupera todos los usuarios
-export async function fetchAllUsers(token) {
+/** Trae todos los usuarios (sin incluir admins) */
+export async function fetchAllUsers() {
+  const token = localStorage.getItem('authToken');
   const res = await fetch(`${BASE_URL}/users`, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      'Authorization': `Bearer ${token}`
     }
-  });
-  if (!res.ok) throw new Error('Error al cargar usuarios');
-  return res.json(); // [{ id, name, email, role, active }, …]
-}
-
-// Cambia el estatus de un usuario
-export async function updateUserStatus(token, userId, isActive) {
-  const res = await fetch(`${BASE_URL}/users/${userId}/status`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({ active: isActive })
   });
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(err.message || 'Error al actualizar estatus');
+    throw new Error(err.message || 'Error al obtener usuarios');
   }
-  return res.json(); // { success: true }
+  const { users } = await res.json();
+  return users;
+}
+
+/** Actualiza el campo active del usuario */
+export async function updateUserStatus(id, active) {
+  const token = localStorage.getItem('authToken');
+  const res = await fetch(`${BASE_URL}/users/${id}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ active })
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Error al actualizar estado');
+  }
+  return res.json();
 }

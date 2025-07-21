@@ -1,20 +1,20 @@
 import Chart from 'chart.js/auto';
-import { navigateTo } from '../router.js';  // asumiendo tu router maneja '#/gas'
+import { navigateTo } from '../router.js';  // Asume que '#/particle' está mapeado
 
-const periodFilter    = document.getElementById("periodFilter");
-const resultsSection  = document.getElementById("results");
-const downloadBtn     = document.getElementById("downloadBtn");
-const backBtn         = document.getElementById("backBtn");
+const periodFilter   = document.getElementById("periodFilter");
+const resultsSection = document.getElementById("results");
+const downloadBtn    = document.getElementById("downloadBtn");
+const backBtn        = document.getElementById("backBtn");
 
-const API_BASE = "http://192.168.115.1:8000/gas";
+const API_BASE = "http://192.168.115.1:8000/particle";
 
 periodFilter.addEventListener("change", () => loadStats(periodFilter.value));
 downloadBtn.addEventListener("click", () => {
   window.open(`${API_BASE}/pdf/${periodFilter.value}`, "_blank");
 });
-backBtn.addEventListener("click", () => navigateTo('#/gas')); 
+backBtn.addEventListener("click", () => navigateTo('#/particle'));
 
-// Arranque
+// Al cargar la página, lee 'today'
 window.addEventListener("DOMContentLoaded", () => loadStats("today"));
 
 async function loadStats(period) {
@@ -30,11 +30,11 @@ async function loadStats(period) {
 }
 
 function renderResults({ label, stats, risk, timeseries }) {
-  // 1) Estadísticas arriba
+  // 1) Estadísticas métricas
   let html = `<div class="stats-grid">`;
   for (let [key, vals] of Object.entries(stats)) {
     if (key === 'count') continue;
-    let rl = risk[key]!=null ? `${(risk[key]*100).toFixed(1)}%` : 'N/A';
+    let rl = risk[key] != null ? `${(risk[key]*100).toFixed(1)}%` : 'N/A';
     html += `
       <div class="stats-card">
         <h3>${key.toUpperCase()}</h3>
@@ -47,7 +47,7 @@ function renderResults({ label, stats, risk, timeseries }) {
   }
   html += `</div>`;
 
-  // 2) Gráficas: para cada campo, donut + line
+  // 2) Gráficas por campo (pm1_0, pm2_5, pm10)
   for (let field of Object.keys(timeseries)) {
     html += `
       <div class="metric-block">
@@ -65,43 +65,57 @@ function renderResults({ label, stats, risk, timeseries }) {
   resultsSection.innerHTML = html;
   showResults();
 
-  // 3) Inicializar cada Chart
+  // 3) Inicialización de Chart.js
   for (let field of Object.keys(timeseries)) {
-    const pts = timeseries[field];
-    const vals = pts.map(p=>p.y);
-    const labels = pts.map(p=>new Date(p.x).toLocaleString());
+    const pts    = timeseries[field];
+    const vals   = pts.map(p => p.y);
+    const labels = pts.map(p => new Date(p.x).toLocaleString());
 
-    // DONUT: probabilidad de crit vs seguro
-    const thr = { lpg:800, co:50, smoke:300 }[field];
-    const safeCount = vals.filter(v=>v<=thr).length;
-    const critCount = vals.filter(v=>v> thr).length;
+    // DONUT: seguro vs crítico (threshold sólo para pm2_5 = 35)
+    const thresholds = { pm1_0: null, pm2_5: 35.0, pm10: null };
+    const thr = thresholds[field];
+    const safeCount = thr != null ? vals.filter(v => v <= thr).length : vals.length;
+    const critCount = thr != null ? vals.filter(v => v > thr).length  : 0;
+
     new Chart(document.getElementById(`donut-${field}`), {
       type:'doughnut',
       data:{
         labels:['Seguro','Crítico'],
-        datasets:[{ data:[safeCount,critCount], backgroundColor:['#77b4ff','#ff7f7f'] }]
+        datasets:[{
+          data: [safeCount, critCount],
+          backgroundColor: ['#77b4ff', '#ff7f7f']
+        }]
       },
-      options:{ responsive:true, plugins:{legend:{position:'bottom'}} }
+      options:{
+        responsive:true,
+        cutout: '70%',
+        plugins:{ legend:{ position:'bottom' } }
+      }
     });
 
-    // LINE: últimos 8 puntos
+    // LINE: evolución histórica
     new Chart(document.getElementById(`line-${field}`), {
       type:'line',
-      data:{ labels, datasets:[{
-        label: field.toUpperCase(),
-        data: vals,
-        fill:true,
-        tension:0.3,
-        backgroundColor:'rgba(75,192,192,0.2)',
-        borderColor:'rgba(75,192,192,1)'
-      }]},
-      options:{ responsive:true, scales:{ x:{ticks:{maxRotation:45,minRotation:30}} } }
+      data:{
+        labels,
+        datasets:[{
+          label: field.toUpperCase(),
+          data: vals,
+          fill:true,
+          tension:0.3,
+          backgroundColor:'rgba(75,192,192,0.2)',
+          borderColor:'rgba(75,192,192,1)'
+        }]
+      },
+      options:{
+        responsive:true,
+        scales:{ x:{ ticks:{ maxRotation:45, minRotation:30 } } }
+      }
     });
   }
 }
 
-// despliega con animación
 function showResults() {
   resultsSection.style.display = 'flex';
-  setTimeout(()=> resultsSection.style.opacity = '1', 20);
+  setTimeout(() => resultsSection.style.opacity = '1', 20);
 }

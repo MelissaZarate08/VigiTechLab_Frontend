@@ -1,3 +1,4 @@
+<!-- src/views/dashboard.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -41,13 +42,14 @@
       <li><a href="#/configSensor">Configuración de sensores</a></li>
     </ul>
     <div class="support">
-      <a href="#"><span>🛠️</span> Soporte</a>
+      <a href="#"><span>🛠</span> Soporte</a>
     </div>
   </nav>
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="dashboard-content">
     <h1>Bienvenido, <span id="welcome-name">Usuario</span></h1>
+
     <section class="status-sensors">
       <h2>Estado de los sensores</h2>
       <div class="cards">
@@ -55,11 +57,16 @@
         <div class="card" id="particle-status">Partículas: —</div>
         <div class="card" id="motion-status">Movimiento: —</div>
       </div>
-
     </section>
+
     <section class="camera-stream">
       <h3>Transmisión de Cámara</h3>
-      <div class="camera-placeholder">Aquí irá la cámara en vivo</div>
+      <div class="camera-container">
+        <!-- Se actualizará dinámicamente desde JS -->
+        <img id="camera-stream"
+             src=""
+             alt="Live stream" />
+      </div>
     </section>
   </main>
 
@@ -70,15 +77,15 @@
       <h4>Emergencias</h4>
       <div class="sos-cards">
         <div class="sos-card">
-          <img class="icon-placeholder" src="/images/sirena.png"></img>
+          <img class="icon-placeholder" src="/images/sirena.png" alt="">
           <p>Bomberos<br><strong>123</strong></p>
         </div>
         <div class="sos-card">
-          <img class="icon-placeholder" src="/images/poli.png"></img>
+          <img class="icon-placeholder" src="/images/poli.png" alt="">
           <p>Policía<br><strong>456</strong></p>
         </div>
         <div class="sos-card">
-          <img class="icon-placeholder" src="/images/ambulancia.png"></img>
+          <img class="icon-placeholder" src="/images/ambulancia.png" alt="">
           <p>Ambulancia<br><strong>789</strong></p>
         </div>
       </div>

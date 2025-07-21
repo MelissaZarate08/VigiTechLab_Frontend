@@ -1,9 +1,7 @@
 // src/js/views/dashboard.js
 
 import { navigateTo } from '../router.js';
-import {
-  initWebSocket
-} from '../../api/dashboardService.js';
+import { initWebSocket } from '../../api/dashboardService.js';
 
 export function initDashboard() {
   // Abrir y cerrar menú
@@ -63,7 +61,7 @@ export function initDashboard() {
     history.pushState(null, null, location.href);
   });
 
-  // WebSocket en tiempo real: Actualizar las tarjetas del estado de sensores
+  // WebSocket en tiempo real: Actualizar tarjetas del estado de sensores
   initWebSocket((data) => {
     console.log('Dato recibido por WebSocket:', data);
 
@@ -75,7 +73,7 @@ export function initDashboard() {
           LPG: ${data.lpg}<br>
           CO: ${data.co}<br>
           Humo: ${data.smoke}
-          `; 
+        `; 
       }
     }
 
@@ -88,7 +86,6 @@ export function initDashboard() {
           PM2.5: ${data.pm2_5}<br>
           PM10: ${data.pm10}
         `;
-
       }
     }
 
@@ -100,8 +97,26 @@ export function initDashboard() {
           Estado: ${data.motion_detected ? "Detectado" : "Sin movimiento"}<br>
           Intensidad: ${data.intensity ?? '–'}
         `;
-
       }
     }
   });
+
+  // Polling Live‑Stream
+  const streamImg = document.getElementById('camera-stream');
+  const POLL_MS   = 1000; // 1 segundo
+
+  async function fetchLatestFrame() {
+    try {
+      const res  = await fetch('http://192.168.115.1:8081/sensor/stream?limit=1');
+      const arr  = await res.json();
+      if (!arr.length) return;
+      const latest = arr[0];
+      streamImg.src = `${latest.image_path}?t=${Date.now()}`;
+    } catch (err) {
+      console.error('Error cargando frame:', err);
+    }
+  }
+
+  fetchLatestFrame();
+  setInterval(fetchLatestFrame, POLL_MS);
 }

@@ -1,41 +1,49 @@
-<!-- src/views/adminDashboard.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>VigiTech – Admin Dashboard</title>
-  <link rel="stylesheet" href="/src/css/dashboard.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VigiTech – Panel Administrador</title>
   <link rel="stylesheet" href="/src/css/adminDashboard.css" />
 </head>
-<body class="view-dashboard">
-  <!-- HEADER simplificado -->
+<body class="view-admin-dashboard">
+
+  <!-- HEADER -->
   <header>
     <div class="header-left">
-      <img src="/images/Mask group.png" alt="VigiTech" class="header-logo" />
-      <h2 style="margin-left:1rem;">Administración</h2>
+      <img src="/images/Mask group.png" alt="VigiTech" class="header-logo">
     </div>
     <div class="header-right">
-      <span id="user-name">Admin</span>
-      <button id="logout" style="margin-left:1rem;">Cerrar sesión</button>
+      <span id="admin-name">Administrador</span>
+      <button id="btn-user" class="user-icon">👤</button>
+      <ul id="dropdown-user" class="dropdown hidden">
+        <li><button id="logout">Cerrar sesión</button></li>
+      </ul>
     </div>
   </header>
 
-  <main class="dashboard-content">
-    <h1>Usuarios registrados</h1>
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>ID</th><th>Nombre</th><th>Email</th>
-          <th>Rol</th><th>Estatus</th><th>Acción</th>
-        </tr>
-      </thead>
-      <tbody id="admin-table-body">
-        <!-- Filas generadas por JS -->
-      </tbody>
-    </table>
+    <!-- SALUDO -->
+  <section class="welcome-admin">
+    <h1>Bienvenido, Administrador</h1>
+    <h3>Usuarios de VigiTech</h3>
+  </section>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="admin-content">
+    <div class="table-wrapper">
+      <div class="table-header">
+        <div class="cell header">Nombre</div>
+        <div class="cell header">ID</div>
+        <div class="cell header">Correo</div>
+        <div class="cell header">Acción</div>
+      </div>
+      <div id="users-container">
+        <!-- filas generadas vía JS -->
+      </div>
+    </div>
   </main>
 
   <script type="module" src="/src/js/views/adminDashboard.js"></script>
+  <script type="module" src="/src/js/router.js"></script>
 </body>
 </html>

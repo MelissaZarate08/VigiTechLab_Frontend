@@ -219,8 +219,17 @@ margin-top: 7rem;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  margin-top: 6rem;
+  margin-top: 5rem;
   margin-right: 2rem;
+  padding: 0.5rem; 
+}
+
+
+/* Redimensiona la imagen dentro del botón */
+.gallery-icon img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;   /* conserva proporción */
 }
 
 .icon-img {

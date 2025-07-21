@@ -1,7 +1,6 @@
 // src/js/views/gasSensor.js
 import Chart from 'chart.js/auto';
 import { navigateTo } from '../router.js';
-import * as gasAPI from '../../api/gasService.js';
 import { initWebSocket } from '../../api/dashboardService.js';
 
 export function initGasSensor() {
@@ -70,9 +69,9 @@ export function initGasSensor() {
       data: {
         labels,
         datasets: [
-          { label: 'LPG (ppm)', data: lpg, borderColor: 'orange', tension: 0.3, fill: false },
-          { label: 'CO (ppm)', data: co, borderColor: 'gray', tension: 0.3, fill: false },
-          { label: 'Humo (ppm)', data: smoke, borderColor: 'black', tension: 0.3, fill: false }
+          { label: 'LPG (ppm)', data: lpg, borderColor: '#00d0ffcc', tension: 0.3, fill: false },
+          { label: 'CO (ppm)', data: co, borderColor: '#017d98cc', tension: 0.3, fill: false },
+          { label: 'Humo (ppm)', data: smoke, borderColor: '#004353cc', tension: 0.3, fill: false }
         ]
       },
       options: {

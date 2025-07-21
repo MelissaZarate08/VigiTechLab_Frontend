@@ -1,0 +1,39 @@
+<!-- src/views/galeria.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VigiTech – Galería</title>
+  <link rel="stylesheet" href="/src/css/galeria.css" />
+</head>
+<body class="view-galeria">
+
+  <!-- HEADER minimal -->
+  <header class="galeria-header">
+    <img src="/images/Mask group.png" alt="VigiTech" class="header-logo" />
+    <button id="btn-back" class="back-button">← Monitoreo real</button>
+  </header>
+
+  <main>
+    <h1 class="galeria-title">
+      Galería de imágenes capturadas<br/>
+      <small>(Evidencias de movimientos detectados)</small>
+    </h1>
+
+    <section class="gallery-container">
+      <!-- tarjetas inyectadas aquí -->
+    </section>
+  </main>
+
+  <!-- Lightbox modal -->
+  <div id="image-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <img src="" alt="Captura ampliada" />
+    </div>
+  </div>
+
+  <script src="/src/js/views/galeria.js"></script>
+</body>
+</html>
