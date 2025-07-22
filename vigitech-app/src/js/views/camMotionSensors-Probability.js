@@ -1,107 +1,176 @@
 import Chart from 'chart.js/auto';
+import 'chartjs-adapter-date-fns'; // Para ejes de tiempo
 import { navigateTo } from '../router.js';
 
 const periodFilter   = document.getElementById('periodFilter');
-const resultsSection = document.getElementById('results');
 const downloadBtn    = document.getElementById('downloadBtn');
 const backBtn        = document.getElementById('backBtn');
+const resultsSection = document.getElementById('results');
+const periodLabel    = document.getElementById('period-label');
 
-const API_BASE = 'http://192.168.115.1:8000/motion';
+// Apunta a localhost (asegúrate de que tu FastAPI esté corriendo aquí)
+const API_BASE = 'http://192.168.115.1:8000/correlation';
 
-periodFilter.addEventListener('change', () => loadStats(periodFilter.value));
+periodFilter.addEventListener('change', () => loadData(periodFilter.value));
 downloadBtn.addEventListener('click', () => {
   window.open(`${API_BASE}/pdf/${periodFilter.value}`, '_blank');
 });
 backBtn.addEventListener('click', () => navigateTo('#/camMotion'));
 
-window.addEventListener('DOMContentLoaded', () => loadStats('today'));
+window.addEventListener('DOMContentLoaded', () => loadData('today'));
 
-async function loadStats(period) {
+async function loadData(period) {
+  // Ocultamos resultados antes de cada petición
+  resultsSection.style.display = 'none';
   try {
-    const res = await fetch(`${API_BASE}/report/${period}`);
-    if (!res.ok) throw new Error(`Error ${res.status}`);
-    const data = await res.json();
-    renderResults(data);
+    const res = await fetch(`${API_BASE}/${period}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Error ${res.status}`);
+    }
+    const { label, stats, points } = await res.json();
+    renderAll(label, stats, points);
   } catch (e) {
-    resultsSection.innerHTML = `<p style="color:red; text-align:center;">${e.message}</p>`;
+    resultsSection.innerHTML =
+      `<p style="color:red; text-align:center;">${e.message}</p>`;
     showResults();
   }
 }
 
-function renderResults({ label, stats, risk, timeseries }) {
-  // Estadísticas
-  let html = '<div class="stats-grid">';
-  for (let [key, vals] of Object.entries(stats)) {
-    if (key === 'count') continue;
-    let rl = risk[key] != null ? `${(risk[key]*100).toFixed(1)}%` : 'N/A';
-    html += `
-      <div class="stats-card">
-        <h3>${key.toUpperCase()}</h3>
-        <p><strong>Media:</strong> ${vals.mean.toFixed(2)}</p>
-        <p><strong>Mín:</strong> ${vals.min.toFixed(2)}</p>
-        <p><strong>Máx:</strong> ${vals.max.toFixed(2)}</p>
-        <p><strong>Riesgo:</strong> ${rl}</p>
-      </div>
-    `;
-  }
-  html += '</div>';
+function renderAll(label, stats, points) {
+  // 1) Mostrar label de periodo
+  periodLabel.textContent = label;
 
-  // Bloque de intensidad
-  html += `
-    <div class="metric-block">
-      <div class="metric-header">Intensidad (${label})</div>
-      <div class="donut-container">
-        <canvas id="donut-intensity"></canvas>
+  // 2) Estadísticas
+  const { mean_intensity, std_intensity, mean_photos, std_photos } = stats;
+  let html = `
+    <div class="stats-grid">
+      <div class="stats-card">
+        <h3>INTENSIDAD</h3>
+        <p><strong>Media:</strong> ${mean_intensity?.toFixed(2) ?? 'N/A'}</p>
+        <p><strong>Desv.:</strong> ${std_intensity?.toFixed(2) ?? 'N/A'}</p>
       </div>
-      <div class="chart-container">
-        <canvas id="line-intensity"></canvas>
+      <div class="stats-card">
+        <h3>FOTOS</h3>
+        <p><strong>Media:</strong> ${mean_photos?.toFixed(2) ?? 'N/A'}</p>
+        <p><strong>Desv.:</strong> ${std_photos?.toFixed(2) ?? 'N/A'}</p>
       </div>
     </div>
-  `;
 
+    <div class="metric-block">
+      <div class="metric-header">Movimiento vs Cámara</div>
+      <div class="chart-container"><canvas id="chart-intensity"></canvas></div>
+      <div class="chart-container"><canvas id="chart-photos"></canvas></div>
+      <div class="chart-container"><canvas id="chart-corr"></canvas></div>
+    </div>
+  `;
   resultsSection.innerHTML = html;
   showResults();
 
-  // Datos para donut y linea
-  const pts = timeseries['intensity'] || [];
-  const vals = pts.map(p => p.y);
-  const total = vals.length;
-  const safeCount = total;  // sin umbral => todo seguro
-  const critCount = 0;
+  // 3) Preparar datos
+  const times = points.map(p => new Date(p.timestamp));
+  const ints  = points.map(p => p.intensity);
+  const phots = points.map(p => p.photo);
 
-  // Donut de riesgo
-  new Chart(document.getElementById('donut-intensity'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Seguro','Crítico'],
-      datasets: [{ data: [safeCount, critCount], backgroundColor: ['#77b4ff','#ff7f7f'] }]
-    },
-    options: { responsive: true, plugins:{ legend:{ position:'bottom' } } }
-  });
-
-  // Line chart
-  const labels = pts.map(p => new Date(p.x).toLocaleString());
-  new Chart(document.getElementById('line-intensity'), {
+  // 4) Línea: Intensidad
+  new Chart(document.getElementById('chart-intensity'), {
     type: 'line',
     data: {
-      labels,
+      labels: times,
       datasets: [{
-        label: 'INTENSIDAD',
-        data: vals,
-        fill: true,
+        label: 'Intensidad',
+        data: ints,
         tension: 0.3,
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)'
+        fill: false,
+        borderColor: '#4e79a7',
+        pointBackgroundColor: '#4e79a7'
       }]
     },
     options: {
       responsive: true,
-      scales: { x: { ticks: { maxRotation:45, minRotation:30 } } }
+      scales: {
+        x: {
+          type: 'time',
+          time: { tooltipFormat: 'dd/MM/yyyy HH:mm' },
+          title: { display: true, text: 'Fecha / Hora' }
+        },
+        y: {
+          title: { display: true, text: 'Intensidad' }
+        }
+      }
+    }
+  });
+
+  // 5) Línea: Fotos
+  new Chart(document.getElementById('chart-photos'), {
+    type: 'line',
+    data: {
+      labels: times,
+      datasets: [{
+        label: 'Fotos',
+        data: phots,
+        tension: 0.3,
+        fill: false,
+        borderColor: '#f28e2b',
+        pointBackgroundColor: '#f28e2b'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: { type: 'time' },
+        y: {
+          title: { display: true, text: 'Fotos (0/1)' },
+          ticks: { stepSize: 1, beginAtZero: true }
+        }
+      }
+    }
+  });
+
+  // 6) Overlay: Intensidad + Fotos
+  new Chart(document.getElementById('chart-corr'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Intensidad (línea)',
+          data: times.map((t,i) => ({ x: t, y: ints[i] })),
+          showLine: true,
+          borderColor: '#59a14f',
+          tension: 0.3,
+          fill: false,
+          pointRadius: 0
+        },
+        {
+          label: 'Fotos (puntos)',
+          data: times.map((t,i) => ({ x: t, y: phots[i] })),
+          pointBackgroundColor: '#e15759',
+          pointRadius: 5,
+          showLine: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          type: 'time',
+          time: { tooltipFormat: 'dd/MM/yyyy HH:mm' },
+          title: { display: true, text: 'Fecha / Hora' }
+        },
+        y: {
+          title: { display: true, text: 'Valor' }
+        }
+      }
     }
   });
 }
 
+// despliega con animación (igual que en las otras vistas)
 function showResults() {
   resultsSection.style.display = 'flex';
-  setTimeout(() => resultsSection.style.opacity = '1', 20);
+  resultsSection.style.opacity = '0';
+  setTimeout(() => {
+    resultsSection.style.opacity = '1';
+  }, 20);
 }

@@ -1,4 +1,4 @@
-<!-- src/views/dashboard.html -->
+<!-- File: src/views/dashboard.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>VigiTech – Dashboard</title>
   <link rel="stylesheet" href="/src/css/dashboard.css">
+  <!-- Toastify -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body class="view-dashboard">
 
@@ -48,7 +50,17 @@
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="dashboard-content">
+
     <h1>Bienvenido, <span id="welcome-name">Usuario</span></h1>
+
+    <!-- Switch Sistema Completo -->
+    <div class="system-switch">
+      <label class="switch">
+        <input type="checkbox" id="system-toggle">
+        <span class="slider"></span>
+      </label>
+      <span id="system-label">Sistema: On</span>
+    </div>
 
     <section class="status-sensors">
       <h2>Estado de los sensores</h2>
@@ -62,10 +74,7 @@
     <section class="camera-stream">
       <h3>Transmisión de Cámara</h3>
       <div class="camera-container">
-        <!-- Se actualizará dinámicamente desde JS -->
-        <img id="camera-stream"
-             src=""
-             alt="Live stream" />
+        <img id="camera-stream" src="" alt="Live stream" />
       </div>
     </section>
   </main>
@@ -93,6 +102,10 @@
     </div>
   </div>
 
+  <!-- Sonido de alerta -->
+  <audio id="alert-sound" src="/audio/notification.mp3" preload="auto"></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script type="module" src="/src/js/views/dashboard.js"></script>
   <script type="module" src="/src/js/router.js"></script>
 </body>

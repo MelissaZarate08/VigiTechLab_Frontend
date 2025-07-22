@@ -1,5 +1,7 @@
-import Chart from 'chart.js/auto';
-import { navigateTo } from '../router.js';  // Asume que '#/particle' está mapeado
+// src/js/views/particleSensor-Probability.js
+
+import { navigateTo } from '../router.js';
+import Chart from 'chart.js/auto';  // Asegúrate de instalar Chart.js (`npm install chart.js`) o incluirlo vía CDN
 
 const periodFilter   = document.getElementById("periodFilter");
 const resultsSection = document.getElementById("results");
@@ -8,114 +10,132 @@ const backBtn        = document.getElementById("backBtn");
 
 const API_BASE = "http://192.168.115.1:8000/particle";
 
-periodFilter.addEventListener("change", () => loadStats(periodFilter.value));
+periodFilter.addEventListener("change", () => loadReport(periodFilter.value));
 downloadBtn.addEventListener("click", () => {
   window.open(`${API_BASE}/pdf/${periodFilter.value}`, "_blank");
 });
-backBtn.addEventListener("click", () => navigateTo('#/particle'));
+backBtn.addEventListener("click", () => navigateTo("#/particle"));
 
-// Al cargar la página, lee 'today'
-window.addEventListener("DOMContentLoaded", () => loadStats("today"));
+window.addEventListener("DOMContentLoaded", () => loadReport("today"));
 
-async function loadStats(period) {
+/**
+ * Carga el reporte JSON con label, stats, risk, times_label y series.
+ */
+async function loadReport(period) {
+  resultsSection.style.display = "none";
   try {
     const res = await fetch(`${API_BASE}/report/${period}`);
-    if (!res.ok) throw new Error(`Error ${res.status}`);
-    const data = await res.json();
-    renderResults(data);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Error ${res.status}`);
+    }
+    const { label, stats, risk, times_label, series } = await res.json();
+    renderReport(label, stats, risk, times_label, series);
   } catch (e) {
-    resultsSection.innerHTML = `<p style="color:red; text-align:center;">${e.message}</p>`;
+    resultsSection.innerHTML = `
+      <p style="color:red; text-align:center;">
+        ${e.message}
+      </p>`;
     showResults();
   }
 }
 
-function renderResults({ label, stats, risk, timeseries }) {
-  // 1) Estadísticas métricas
+/**
+ * Construye el HTML de estadísticas y contenedores de canvas,
+ * y genera las gráficas con Chart.js.
+ */
+function renderReport(label, stats, risk, times, series) {
+  // 1) Periodo
+  const periodEl = document.createElement("h2");
+  periodEl.id = "period-label";
+  periodEl.textContent = label;
+
+  // 2) Estadísticas
   let html = `<div class="stats-grid">`;
-  for (let [key, vals] of Object.entries(stats)) {
-    if (key === 'count') continue;
-    let rl = risk[key] != null ? `${(risk[key]*100).toFixed(1)}%` : 'N/A';
+  for (let [field, vals] of Object.entries(stats)) {
+    if (field === "count") continue;
+    const pct = risk[field] != null
+      ? `${(risk[field] * 100).toFixed(1)}%`
+      : "N/A";
     html += `
       <div class="stats-card">
-        <h3>${key.toUpperCase()}</h3>
+        <h3>${field.toUpperCase()}</h3>
         <p><strong>Media:</strong> ${vals.mean.toFixed(2)}</p>
         <p><strong>Mín:</strong> ${vals.min.toFixed(2)}</p>
         <p><strong>Máx:</strong> ${vals.max.toFixed(2)}</p>
-        <p><strong>Riesgo:</strong> ${rl}</p>
+        <p><strong>Riesgo:</strong> ${pct}</p>
       </div>
     `;
   }
   html += `</div>`;
 
-  // 2) Gráficas por campo (pm1_0, pm2_5, pm10)
-  for (let field of Object.keys(timeseries)) {
+  // 3) Canvases dinámicos
+  for (let key of Object.keys(series)) {
+    const title = key.replace(/_/g, " ").toUpperCase();
     html += `
       <div class="metric-block">
-        <div class="metric-header">${field.toUpperCase()} (${label})</div>
-        <div class="donut-container">
-          <canvas id="donut-${field}"></canvas>
-        </div>
+        <div class="metric-header">${title}</div>
         <div class="chart-container">
-          <canvas id="line-${field}"></canvas>
+          <canvas id="chart_${key}" width="400" height="200"></canvas>
         </div>
       </div>
     `;
   }
 
-  resultsSection.innerHTML = html;
+  // 4) Inyectar sección
+  resultsSection.innerHTML = "";
+  resultsSection.appendChild(periodEl);
+  resultsSection.insertAdjacentHTML("beforeend", html);
   showResults();
 
-  // 3) Inicialización de Chart.js
-  for (let field of Object.keys(timeseries)) {
-    const pts    = timeseries[field];
-    const vals   = pts.map(p => p.y);
-    const labels = pts.map(p => new Date(p.x).toLocaleString());
+  // 5) Crear cada gráfica
+  for (let [key, data] of Object.entries(series)) {
+    const ctx = document.getElementById(`chart_${key}`).getContext('2d');
+    const isBinary = data.every(v => v === 0 || v === 1);
 
-    // DONUT: seguro vs crítico (threshold sólo para pm2_5 = 35)
-    const thresholds = { pm1_0: null, pm2_5: 35.0, pm10: null };
-    const thr = thresholds[field];
-    const safeCount = thr != null ? vals.filter(v => v <= thr).length : vals.length;
-    const critCount = thr != null ? vals.filter(v => v > thr).length  : 0;
-
-    new Chart(document.getElementById(`donut-${field}`), {
-      type:'doughnut',
-      data:{
-        labels:['Seguro','Crítico'],
-        datasets:[{
-          data: [safeCount, critCount],
-          backgroundColor: ['#77b4ff', '#ff7f7f']
-        }]
-      },
-      options:{
-        responsive:true,
-        cutout: '70%',
-        plugins:{ legend:{ position:'bottom' } }
-      }
-    });
-
-    // LINE: evolución histórica
-    new Chart(document.getElementById(`line-${field}`), {
-      type:'line',
-      data:{
-        labels,
-        datasets:[{
-          label: field.toUpperCase(),
-          data: vals,
-          fill:true,
-          tension:0.3,
-          backgroundColor:'rgba(75,192,192,0.2)',
-          borderColor:'rgba(75,192,192,1)'
-        }]
-      },
-      options:{
-        responsive:true,
-        scales:{ x:{ ticks:{ maxRotation:45, minRotation:30 } } }
-      }
-    });
+    if (isBinary) {
+      // Doughnut chart
+      const crit = data.filter(v => v === 1).length;
+      const safe = data.length - crit;
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Crítico','Seguro'],
+          datasets: [{
+            data: [crit, safe],
+            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(75, 192, 192, 0.6)']
+          }]
+        },
+        options: { responsive: true }
+      });
+    } else {
+      // Line chart
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: times,   // ej. ['22/07 08:00', '22/07 10:00', ...]
+          datasets: [{
+            label: key.toUpperCase(),
+            data,
+            fill: false,
+            tension: 0.1,
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: 'Fecha / Hora' } },
+            y: { title: { display: true, text: key.toUpperCase() } }
+          }
+        }
+      });
+    }
   }
 }
 
 function showResults() {
-  resultsSection.style.display = 'flex';
-  setTimeout(() => resultsSection.style.opacity = '1', 20);
+  resultsSection.style.display = "flex";
+  resultsSection.style.opacity = "0";
+  setTimeout(() => resultsSection.style.opacity = "1", 20);
 }
