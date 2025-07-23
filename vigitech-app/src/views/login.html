@@ -1,43 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>VigiTech - Iniciar Sesión</title>
 
-  <!-- Roboto desde Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+  />
 
-  <!-- Estilos propios -->
-  <link rel="stylesheet" href="/src/css/login.css">
+  <link rel="stylesheet" href="/src/css/login.css" />
 </head>
+
 <body>
   <div class="login-wrapper">
-    <!-- Lado izquierdo: imagen de fondo -->
     <div class="login-image"></div>
 
-    <!-- Lado derecho: tarjeta de login -->
     <div class="login-card">
-      <img src="/images/logoOJO.png" alt="Logo VigiTech" class="login-logo">
+      <img src="/images/logoOJO.png" alt="Logo VigiTech" class="login-logo" />
       <h2 class="login-title">Bienvenido a VigiTech</h2>
 
       <form id="login-form" class="login-form">
         <label for="login-email">Correo</label>
-        <input type="email" id="login-email" placeholder="tu@ejemplo.com" required>
+        <input
+          type="email"
+          id="login-email"
+          placeholder="tu@ejemplo.com"
+          required
+        />
 
         <label for="login-password">Contraseña</label>
-        <input type="password" id="login-password" placeholder="••••••••" required>
+        <input
+          type="password"
+          id="login-password"
+          placeholder="••••••••"
+          required
+        />
 
         <button type="submit">Ingresar</button>
       </form>
 
       <p class="login-footer">
-        ¿No tienes cuenta?<a href="#/register">Regístrate</a>
+        ¿No tienes cuenta?
+        <a href="#/register">Regístrate</a>
       </p>
     </div>
   </div>
 
-  <!-- Lógica de login y router -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="module" src="/src/js/views/login.js"></script>
   <script type="module" src="/src/js/router.js"></script>
 </body>

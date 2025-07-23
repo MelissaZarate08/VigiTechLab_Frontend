@@ -1,17 +1,14 @@
-/* Reutilizamos reset y fuente de las otras vistas */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Roboto', sans-serif; color: #002658; background: #f5f7fa; }
 
-/* contenedor relativo y alto fijo */
 .display-container {
   position: relative;
   width: 100%;
   max-width: 600px;
-  height: 350px;    /* igual que el canvas */
+  height: 350px;   
   margin: 0 auto;
 }
 
-/* chart y table absolutas, ocupando todo el contenedor */
 .display-container canvas,
 .display-container table {
   position: absolute;
@@ -26,13 +23,11 @@ body { font-family: 'Roboto', sans-serif; color: #002658; background: #f5f7fa; }
   overflow-y: auto;
 }
 
-/* tabla estilo */
 .display-container table {
   border-collapse: separate;
   border-spacing: 0;
 }
 
-/* filas y celdas como antes */
 .display-container table th,
 .display-container table td {
   padding: 0.5rem 1rem;
@@ -41,14 +36,10 @@ body { font-family: 'Roboto', sans-serif; color: #002658; background: #f5f7fa; }
   background: transparent;
 }
 
-/* ocultar con la clase hidden */
 .hidden {
   display: none !important;
 }
 
-
-
-/* HEADER */
 header {
   position: fixed; top: 0; left: 0; right: 0;
   display: flex; justify-content: space-between; align-items: center;
@@ -87,7 +78,6 @@ header {
 .dropdown.hidden { 
   display: none; }
 
-/* === Replicar el desplazamiento del contenido === */
 .view-dashboard { padding-top: 60px; }
 .dashboard-content {
   margin-top: 9rem;
@@ -97,8 +87,6 @@ header {
   margin-left: 250px;
 }
 
-
-/* SIDEBAR */
 .sidebar {
   position: fixed; top: 0; left: 0; height: 100%; width: 0;
   overflow: hidden; background: #002658; color: #fff;
@@ -130,74 +118,87 @@ hr { border: none; border-top: 1px solid #1a3b6e; margin: 0.5rem 0; }
 .support { position: absolute; bottom: 1rem; width: 100%; text-align: center; }
 .support a { color: #fff; text-decoration: none; font-size: 0.9rem; }
 
+.system-switch {
+  position: absolute;
+  top: 6rem;   
+  right: 6.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-/* SOS */
+.icon-placeholder {
+  width: 32px; height: 32px; background: #fff;
+  border-radius: 50%; display: inline-block;
+}
+
+.sos-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1100;
+}
+.sos-modal:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
+
+ .sos-content {
+   position: absolute;
+   bottom: 3rem;
+   right: 3rem;
+   background: #fff;
+   padding: 0.5rem;
+   border-radius: 20px;
+   width: 200px;
+   max-height: 300px;
+   overflow-y: auto;
+   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+ }
+
+.close-sos {
+  display: none;
+}
+
 .sos-button {
   position: fixed; bottom: 1rem; right: 1rem;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
+  z-index: 1200;
 }
+
 .sos-button img {
   width: 50px;
   height: 50px;
   object-fit: contain;
 }
 
-.sos-modal.hidden { 
-  display: none; }
-.sos-modal {
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%;
-  background: rgba(0, 18, 46, 0.3);
-  
-}
-
-.sos-content {
-  position: absolute; bottom: 80px; right: 1rem;
-  background: #fff; padding: 1rem;
-  border-radius: 30px; width: 240px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-h4 {color: #002658;  margin-top: rem;
-  margin-left: 2rem;
-  margin-bottom: 1rem; 
-  font-size: 1.4rem;}
-.sos-content h3 { margin-bottom: 0.7rem; color: #002658; }
-.sos-cards { 
-  display: flex; 
-  flex-direction: 
-  column; gap: 0.8rem; }
-.sos-card {
-  display: flex; 
-  align-items: center; 
+.sos-cards {
+  display: flex;
+  flex-direction: column;
   gap: 0.8rem;
-  background: #BAD8FF; 
-  padding: 0.8rem; 
+  margin: 0.5rem 0;
+}
+.sos-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #BAD8FF;
+  padding: 0.8rem;
   border-radius: 35px;
-  transition: background-color 0.2s ease;
+}
+.sos-card img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
-.sos-card:hover, 
-.sos-card:focus {
- background-color: #77b4ff;
-}
-.icon-placeholder {
-  width: 32px; height: 32px; background: #fff;
-  border-radius: 50%; display: inline-block;
-}
-.close-sos {
-  position: absolute; top: 8px; right: 8px;
-  background: none; border: none; font-size: 1.2rem;
-  color: #6a0202; cursor: pointer;
-}
-
-/* Título y tooltip */
 .sensor-titles {
 margin-top: 7rem;
 }
@@ -213,7 +214,7 @@ margin-top: 7rem;
 
 .gallery-icon {
   position: absolute;
-  top: 3rem;
+  top: 6rem;
   right: 0;
   background: none;
   border: none;
@@ -224,12 +225,10 @@ margin-top: 7rem;
   padding: 0.5rem; 
 }
 
-
-/* Redimensiona la imagen dentro del botón */
 .gallery-icon img {
   width: 30px;
   height: 30px;
-  object-fit: contain;   /* conserva proporción */
+  object-fit: contain; 
 }
 
 .icon-img {
@@ -248,10 +247,6 @@ margin-top: 7rem;
   opacity: 1;
 }
 
-
-
-
-/* Monitoring */
 .monitoring {
   margin: 1rem 4rem 2rem;
   padding: 1.5rem; background: #DAEBFF; border-radius: 40px;
@@ -267,13 +262,12 @@ margin-top: 7rem;
 }
 .view-toggle button.active { background: #002658; color: #fff; }
 
-/* Gráfica y Tabla */
 .data-display {
   display: grid;
   grid-template-rows: auto;
   gap: 1.5rem;
   max-width: 600px;
-  margin: 0 auto;   /* centra horizontalmente */
+  margin: 0 auto; 
   padding: 1rem 0;
 }
 .view-dashboard { padding-top: 60px; }
@@ -285,10 +279,9 @@ margin-top: 7rem;
   margin-left: 250px;
 }
 
-
 .data-display canvas {
   width: 100% !important;
-  height: 350px !important;    /* un poco más de altura */
+  height: 350px !important;   
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -303,7 +296,6 @@ margin-top: 7rem;
 }
 .hidden { display: none; }
 
-/* Real time */
 .realtime {
   margin: 2rem 4rem;
 }
@@ -318,12 +310,13 @@ margin-top: 7rem;
 }
 .actions button {
   background: #002658; color: #fff; border: none;
-  padding: 0.8rem 1.2rem; border-radius: 25px; cursor: pointer;
+  padding: 0.7rem 1.2rem; border-radius: 25px; cursor: pointer;
+  max-width: 200px;
 }
 
 .sensor-switch {
   position: absolute;
-  top: 6rem;
+  top: 8rem;
   right: 2rem;
   display: flex;
   align-items: center;

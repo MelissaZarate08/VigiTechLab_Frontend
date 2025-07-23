@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = 'http://vigitech-auth.namixcode.cc:8080/api';
 
 export async function registerUser({ name, email, password, role, id_Sistema }) {
   console.log('Register payload:', { name, email, password, role, id_Sistema });
@@ -10,12 +10,11 @@ export async function registerUser({ name, email, password, role, id_Sistema }) 
   });
 
   if (!res.ok) {
-    // Lanza el body de error (por ejemplo: { success: false, message: "..."} )
     const err = await res.json();
     throw err;
   }
 
-  return res.json(); // { success: true, token: "..." }
+  return res.json(); 
 }
 
 export async function loginUser({ email, password }) {

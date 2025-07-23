@@ -1,4 +1,3 @@
-/* src/css/style.css */
 * {
   margin: 0;
   padding: 0;
@@ -8,7 +7,6 @@ body {
   font-family: Arial, sans-serif;
   background-color: #0a100b;
   color: #fff;
-  /* NO pongas display:flex o grid aquí */
 }
 a {
   text-decoration: none;

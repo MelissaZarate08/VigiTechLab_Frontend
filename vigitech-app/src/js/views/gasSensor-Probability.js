@@ -1,12 +1,12 @@
 import Chart from 'chart.js/auto';
-import { navigateTo } from '../router.js';  // asumiendo tu router maneja '#/gas'
+import { navigateTo } from '../router.js'; 
 
 const periodFilter    = document.getElementById("periodFilter");
 const resultsSection  = document.getElementById("results");
 const downloadBtn     = document.getElementById("downloadBtn");
 const backBtn         = document.getElementById("backBtn");
 
-const API_BASE = "http://192.168.115.1:8000/gas";
+const API_BASE = "http://vigitech-analisis.namixcode.cc:8000/gas";
 
 periodFilter.addEventListener("change", () => loadStats(periodFilter.value));
 downloadBtn.addEventListener("click", () => {
@@ -14,7 +14,6 @@ downloadBtn.addEventListener("click", () => {
 });
 backBtn.addEventListener("click", () => navigateTo('#/gas')); 
 
-// Arranque
 window.addEventListener("DOMContentLoaded", () => loadStats("today"));
 
 async function loadStats(period) {
@@ -30,7 +29,6 @@ async function loadStats(period) {
 }
 
 function renderResults({ label, stats, risk, timeseries }) {
-  // 1) Estadísticas arriba
   let html = `<div class="stats-grid">`;
   for (let [key, vals] of Object.entries(stats)) {
     if (key === 'count') continue;
@@ -47,7 +45,6 @@ function renderResults({ label, stats, risk, timeseries }) {
   }
   html += `</div>`;
 
-  // 2) Gráficas: para cada campo, donut + line
   for (let field of Object.keys(timeseries)) {
     html += `
       <div class="metric-block">
@@ -65,13 +62,11 @@ function renderResults({ label, stats, risk, timeseries }) {
   resultsSection.innerHTML = html;
   showResults();
 
-  // 3) Inicializar cada Chart
   for (let field of Object.keys(timeseries)) {
     const pts = timeseries[field];
     const vals = pts.map(p=>p.y);
     const labels = pts.map(p=>new Date(p.x).toLocaleString());
 
-    // DONUT: probabilidad de crit vs seguro
     const thr = { lpg:800, co:50, smoke:300 }[field];
     const safeCount = vals.filter(v=>v<=thr).length;
     const critCount = vals.filter(v=>v> thr).length;
@@ -84,7 +79,6 @@ function renderResults({ label, stats, risk, timeseries }) {
       options:{ responsive:true, plugins:{legend:{position:'bottom'}} }
     });
 
-    // LINE: últimos 8 puntos
     new Chart(document.getElementById(`line-${field}`), {
       type:'line',
       data:{ labels, datasets:[{
@@ -100,7 +94,6 @@ function renderResults({ label, stats, risk, timeseries }) {
   }
 }
 
-// despliega con animación
 function showResults() {
   resultsSection.style.display = 'flex';
   setTimeout(()=> resultsSection.style.opacity = '1', 20);

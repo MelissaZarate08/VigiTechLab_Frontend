@@ -1,4 +1,3 @@
-/* Reset básico */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,20 +9,17 @@ body {
   overflow: auto;
 }
 
-/* Wrapper: split 2/3–1/3 */
 .login-wrapper {
   display: flex;
   width: 100vw;
   min-height: 100vh;
 }
 
-/* Columna izquierda: imagen */
 .login-image {
   flex: 2;
   background: url('../../public/images/labLogin.jpg') center/cover no-repeat;
 }
 
-/* Columna derecha: card */
 .login-card {
   flex: 1;
   background: #ffffff;
@@ -31,7 +27,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* Solapamiento para dejar ver el borde redondeado */
   margin-left: -4rem;
   padding: 2rem 2rem;
   border-top-left-radius: 2rem;
@@ -41,13 +36,11 @@ body {
   z-index: 1;
 }
 
-/* Logo */
 .login-logo {
   width: 64px;
   margin-bottom: 1rem;
 }
 
-/* Título */
 .login-title {
   font-size: 1.75rem;
   color: #002658;
@@ -55,7 +48,6 @@ body {
   text-align: center;
 }
 
-/* Formulario */
 .login-form {
   width: 100%;
   display: flex;
@@ -82,7 +74,6 @@ body {
   color: #002658;
 }
 
-/* Botón */
 .login-form button {
   margin-top: 1rem;
   width: 100%;
@@ -100,7 +91,6 @@ body {
   transform: translateY(-1px);
 }
 
-/* Pie de formulario */
 .login-footer {
   margin-top: 2rem;
   font-size: 0.85rem;
@@ -116,12 +106,11 @@ body {
   text-decoration: underline;
 }
 
-/* ------------ Responsive (móvil) ------------ */
 @media (max-width: 768px) {
   .login-wrapper {
     flex-direction: column;
   }
-  /* Ocultamos la imagen en móvil */
+
   .login-image {
     display: none;
   }

@@ -1,14 +1,12 @@
-// src/js/views/particleSensor-Probability.js
-
 import { navigateTo } from '../router.js';
-import Chart from 'chart.js/auto';  // Asegúrate de instalar Chart.js (`npm install chart.js`) o incluirlo vía CDN
+import Chart from 'chart.js/auto';  
 
 const periodFilter   = document.getElementById("periodFilter");
 const resultsSection = document.getElementById("results");
 const downloadBtn    = document.getElementById("downloadBtn");
 const backBtn        = document.getElementById("backBtn");
 
-const API_BASE = "http://192.168.115.1:8000/particle";
+const API_BASE = "http://vigitech-analisis.namixcode.cc:8000/particle";
 
 periodFilter.addEventListener("change", () => loadReport(periodFilter.value));
 downloadBtn.addEventListener("click", () => {
@@ -18,9 +16,6 @@ backBtn.addEventListener("click", () => navigateTo("#/particle"));
 
 window.addEventListener("DOMContentLoaded", () => loadReport("today"));
 
-/**
- * Carga el reporte JSON con label, stats, risk, times_label y series.
- */
 async function loadReport(period) {
   resultsSection.style.display = "none";
   try {
@@ -40,17 +35,12 @@ async function loadReport(period) {
   }
 }
 
-/**
- * Construye el HTML de estadísticas y contenedores de canvas,
- * y genera las gráficas con Chart.js.
- */
 function renderReport(label, stats, risk, times, series) {
-  // 1) Periodo
+
   const periodEl = document.createElement("h2");
   periodEl.id = "period-label";
   periodEl.textContent = label;
 
-  // 2) Estadísticas
   let html = `<div class="stats-grid">`;
   for (let [field, vals] of Object.entries(stats)) {
     if (field === "count") continue;
@@ -69,7 +59,6 @@ function renderReport(label, stats, risk, times, series) {
   }
   html += `</div>`;
 
-  // 3) Canvases dinámicos
   for (let key of Object.keys(series)) {
     const title = key.replace(/_/g, " ").toUpperCase();
     html += `
@@ -82,19 +71,16 @@ function renderReport(label, stats, risk, times, series) {
     `;
   }
 
-  // 4) Inyectar sección
   resultsSection.innerHTML = "";
   resultsSection.appendChild(periodEl);
   resultsSection.insertAdjacentHTML("beforeend", html);
   showResults();
 
-  // 5) Crear cada gráfica
   for (let [key, data] of Object.entries(series)) {
     const ctx = document.getElementById(`chart_${key}`).getContext('2d');
     const isBinary = data.every(v => v === 0 || v === 1);
 
     if (isBinary) {
-      // Doughnut chart
       const crit = data.filter(v => v === 1).length;
       const safe = data.length - crit;
       new Chart(ctx, {
@@ -109,11 +95,10 @@ function renderReport(label, stats, risk, times, series) {
         options: { responsive: true }
       });
     } else {
-      // Line chart
       new Chart(ctx, {
         type: 'line',
         data: {
-          labels: times,   // ej. ['22/07 08:00', '22/07 10:00', ...]
+          labels: times, 
           datasets: [{
             label: key.toUpperCase(),
             data,

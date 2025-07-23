@@ -1,4 +1,3 @@
-// src/js/router.js
 export const routes = {
   '#/':         '/src/views/home.html',
   '#/login':    '/src/views/login.html',
@@ -16,7 +15,6 @@ export const routes = {
 
 
 };
-// en router.js
 export function navigateTo(hash, { replace = false } = {}) {
   if (replace) {
     history.replaceState(null, '', hash);

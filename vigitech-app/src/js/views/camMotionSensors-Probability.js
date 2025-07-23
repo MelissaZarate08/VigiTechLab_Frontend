@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import 'chartjs-adapter-date-fns'; // Para ejes de tiempo
+import 'chartjs-adapter-date-fns'; 
 import { navigateTo } from '../router.js';
 
 const periodFilter   = document.getElementById('periodFilter');
@@ -8,8 +8,7 @@ const backBtn        = document.getElementById('backBtn');
 const resultsSection = document.getElementById('results');
 const periodLabel    = document.getElementById('period-label');
 
-// Apunta a localhost (asegúrate de que tu FastAPI esté corriendo aquí)
-const API_BASE = 'http://192.168.115.1:8000/correlation';
+const API_BASE = 'http://vigitech-analisis.namixcode.cc:8000/correlation';
 
 periodFilter.addEventListener('change', () => loadData(periodFilter.value));
 downloadBtn.addEventListener('click', () => {
@@ -20,7 +19,6 @@ backBtn.addEventListener('click', () => navigateTo('#/camMotion'));
 window.addEventListener('DOMContentLoaded', () => loadData('today'));
 
 async function loadData(period) {
-  // Ocultamos resultados antes de cada petición
   resultsSection.style.display = 'none';
   try {
     const res = await fetch(`${API_BASE}/${period}`);
@@ -38,10 +36,8 @@ async function loadData(period) {
 }
 
 function renderAll(label, stats, points) {
-  // 1) Mostrar label de periodo
   periodLabel.textContent = label;
 
-  // 2) Estadísticas
   const { mean_intensity, std_intensity, mean_photos, std_photos } = stats;
   let html = `
     <div class="stats-grid">
@@ -67,12 +63,10 @@ function renderAll(label, stats, points) {
   resultsSection.innerHTML = html;
   showResults();
 
-  // 3) Preparar datos
   const times = points.map(p => new Date(p.timestamp));
   const ints  = points.map(p => p.intensity);
   const phots = points.map(p => p.photo);
 
-  // 4) Línea: Intensidad
   new Chart(document.getElementById('chart-intensity'), {
     type: 'line',
     data: {
@@ -101,7 +95,6 @@ function renderAll(label, stats, points) {
     }
   });
 
-  // 5) Línea: Fotos
   new Chart(document.getElementById('chart-photos'), {
     type: 'line',
     data: {
@@ -127,7 +120,6 @@ function renderAll(label, stats, points) {
     }
   });
 
-  // 6) Overlay: Intensidad + Fotos
   new Chart(document.getElementById('chart-corr'), {
     type: 'scatter',
     data: {
@@ -166,7 +158,6 @@ function renderAll(label, stats, points) {
   });
 }
 
-// despliega con animación (igual que en las otras vistas)
 function showResults() {
   resultsSection.style.display = 'flex';
   resultsSection.style.opacity = '0';

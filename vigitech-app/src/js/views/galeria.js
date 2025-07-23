@@ -1,4 +1,3 @@
-// src/js/views/galeria.js
 import { navigateTo } from '../router.js';
 import { fetchGallery } from '../../api/galeriaService.js';
 
@@ -10,7 +9,6 @@ export async function initGaleria() {
 
   btnBack.addEventListener('click', () => navigateTo('#/camMotion'));
 
-  // Carga últimas 30 capturas
   let snaps = await fetchGallery();
   snaps = snaps.slice(0, 30);
 
@@ -23,7 +21,6 @@ export async function initGaleria() {
     img.alt  = `Captura ${snap.id}`;
     card.appendChild(img);
 
-    // Badge en las 5 primeras
     if (idx < 5) {
       const badge = document.createElement('span');
       badge.classList.add('badge-new');
@@ -31,7 +28,6 @@ export async function initGaleria() {
       card.appendChild(badge);
     }
 
-    // Al click, abre modal
     card.addEventListener('click', () => {
       modalImg.src = snap.image_path;
       modal.classList.remove('hidden');
@@ -40,7 +36,6 @@ export async function initGaleria() {
     container.appendChild(card);
   });
 
-  // Cerrar modal al click en backdrop
   modal.addEventListener('click', e => {
     if (e.target.classList.contains('modal-backdrop')) {
       modal.classList.add('hidden');
@@ -49,5 +44,4 @@ export async function initGaleria() {
   });
 }
 
-// Arranca la galería
 window.addEventListener('DOMContentLoaded', initGaleria);

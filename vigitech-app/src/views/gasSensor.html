@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>VigiTech – Sensor de Gas</title>
   <link rel="stylesheet" href="/src/css/gasSensor.css" />
-  <!-- Toastify -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body class="view-dashboard">
 
-  <!-- HEADER -->
   <header>
     <div class="header-left">
       <button id="btn-menu" class="hamburger-open">☰</button>
@@ -25,29 +23,26 @@
     </div>
   </header>
 
-  <!-- SIDEBAR -->
   <nav id="sidebar" class="sidebar">
     <button id="btn-close" class="hamburger-close">✕</button>
     <ul class="menu">
-      <li><a href="#/dashboard" id="ctrl-dashboard">Panel de control</a></li>
+      <li><a href="#/dashboard">Panel de control</a></li>
       <hr>
       <li class="has-sub">
         <span id="toggle-sensors">Sensores ▾</span>
         <ul class="sub-menu">
-          <li><a href="#/gas" id="ctrl-gas" class="active">Gas</a></li>
+          <li><a href="#/gas" class="active">Gas</a></li>
           <li><a href="#/particle">Partículas</a></li>
           <li><a href="#/camMotion">Cámara y Movimiento</a></li>
         </ul>
       </li>
       <hr>
-      <li><a href="#/configSensor">Configuración de sensores</a></li>
     </ul>
     <div class="support">
       <a href="#"><span>🛠️</span> Soporte</a>
     </div>
   </nav>
 
-  <!-- MAIN CONTENT -->
   <main class="dashboard-content">
     <h1 class="sensor-title">
       Sensor de Gas <span class="sensor-model">(MQ-2)</span>
@@ -57,7 +52,6 @@
       </span>
     </h1>
 
-    <!-- Switch Sistema Completo -->
     <div class="system-switch">
       <label class="switch">
         <input type="checkbox" id="system-toggle">
@@ -66,7 +60,6 @@
       <span id="system-label">Sistema: On</span>
     </div>
 
-    <!-- Switch Sensor de Gas -->
     <div class="sensor-switch" id="gas-switch-container">
       <label class="switch">
         <input type="checkbox" id="gas-toggle">
@@ -74,6 +67,18 @@
       </label>
       <span id="gas-label">Gas: On</span>
     </div>
+
+  <section class="realtime">
+  <h2>Datos en tiempo real</h2>
+  <div class="rt-boxes">
+    <div class="rt-box"><p><strong>LPG:</strong> <span id="rt-lpg">–</span> ppm</p></div>
+    <div class="rt-box"><p><strong>CO:</strong> <span id="rt-co">–</span> ppm</p></div>
+    <div class="rt-box"><p><strong>Smoke:</strong> <span id="rt-smoke">–</span> ppm</p></div>
+  </div>
+  <div class="actions">
+    <button id="btn-stats">Ver Datos Históricos</button>
+  </div>
+</section>
 
     <section class="monitoring">
       <h2>Monitoreo de Sensor</h2>
@@ -99,53 +104,22 @@
       </div>
     </section>
 
-    <section class="realtime">
-      <h2>Datos en tiempo real</h2>
-      <div class="rt-box">
-        <p><strong>Hora:</strong> <span id="rt-hour">–</span></p>
-        <p><strong>Gas:</strong> <span id="rt-value">–</span> ppm</p>
-      </div>
-      <div class="actions">
-        <!-- Aquí redirige a tu historial -->
-        <button id="btn-stats">Ver Datos Históricos</button>
-      </div>
-    </section>
-  </main>
 
-  <!-- SOS -->
-  <button id="btn-sos" class="sos-button"><img src="/images/sos.png" alt="SOS"/></button>
-  <div id="modal-sos" class="sos-modal hidden">
-    <div class="sos-content">
-      <h4>Emergencias</h4>
-      <div class="sos-cards">
-        <div class="sos-card">
-          <img class="icon-placeholder" src="/images/sirena.png" alt="">
-          <p>Bomberos<br><strong>123</strong></p>
-        </div>
-        <div class="sos-card">
-          <img class="icon-placeholder" src="/images/poli.png" alt="">
-          <p>Policía<br><strong>456</strong></p>
-        </div>
-        <div class="sos-card">
-          <img class="icon-placeholder" src="/images/ambulancia.png" alt="">
-          <p>Ambulancia<br><strong>789</strong></p>
-        </div>
-      </div>
-      <button id="close-sos" class="close-sos">✕</button>
+<button id="btn-sos" class="sos-button"><img src="/images/sos.png" alt="SOS"/></button>
+<div id="modal-sos" class="sos-modal hidden">
+  <div class="sos-content">
+    <h3>Emergencias</h3>
+    <div class="sos-cards">
+        <div class="sos-card"><img src="/images/sirena.png"><p>Bomberos<br><strong>123</strong></p></div>
+        <div class="sos-card"><img src="/images/poli.png"><p>Policía<br><strong>456</strong></p></div>
+        <div class="sos-card"><img src="/images/ambulancia.png"><p>Ambulancia<br><strong>789</strong></p></div>
     </div>
+    <button id="close-sos" class="close-sos">✕</button>
   </div>
+</div>
 
-  <!-- Sonido de alerta -->
   <audio id="alert-sound" src="/audio/notification.mp3" preload="auto"></audio>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <script type="module">
-    import { initGasSensor } from '/src/js/views/gasSensor.js';
-    import { navigateTo } from '/src/js/router.js';
-    initGasSensor();
-    document.getElementById('btn-stats').addEventListener('click', () => navigateTo('#/gasProbability'));
-  </script>
-  <script type="module" src="/src/js/router.js"></script>
 </body>
 </html>

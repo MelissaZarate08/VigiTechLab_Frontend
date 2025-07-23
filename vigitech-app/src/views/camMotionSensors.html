@@ -1,4 +1,3 @@
-<!-- File: src/views/camMotionSensors.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,12 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>VigiTech – Cámara y Movimiento</title>
   <link rel="stylesheet" href="/src/css/camMotionSensors.css" />
-  <!-- Toastify -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body class="view-dashboard">
 
-  <!-- HEADER -->
   <header>
     <div class="header-left">
       <button id="btn-menu" class="hamburger-open">☰</button>
@@ -26,7 +23,6 @@
     </div>
   </header>
 
-  <!-- SIDEBAR -->
   <nav id="sidebar" class="sidebar">
     <button id="btn-close" class="hamburger-close">✕</button>
     <ul class="menu">
@@ -41,54 +37,45 @@
         </ul>
       </li>
       <hr>
-      <li><a href="#/configSensor">Configuración de sensores</a></li>
     </ul>
     <div class="support">
       <a href="#"><span>🛠️</span> Soporte</a>
     </div>
   </nav>
 
-  <!-- MAIN CONTENT -->
   <main class="dashboard-content">
-
     <div class="sensor-titles">
       <h1 class="sensor-title">
-        Cámara <span class="sensor-model">(OV5647)</span>
-        <span class="icon-tooltip" tabindex="0">
-          <img src="/images/imagen.png" alt="Información" class="icon-img" />
-          <img src="/images/camsensor.png" alt="OV5647" class="tooltip-img"/>
-        </span>
+        Cámara <span class="sensor-model">(WEBCAM)</span>
+        <span class="icon-tooltip"><img src="/images/imagen.png" class="icon-img"/><img src="/images/cam.jpg" class="tooltip-img"/></span>
       </h1>
       <h2 class="sensor-title">
         Movimiento <span class="sensor-model">(PIR‑501)</span>
-        <span class="icon-tooltip" tabindex="0">
-          <img src="/images/imagen.png" alt="Información" class="icon-img" />
-          <img src="/images/motsensor.png" alt="PIR-501" class="tooltip-img"/>
-        </span>
+        <span class="icon-tooltip"><img src="/images/imagen.png" class="icon-img"/><img src="/images/motsensor.png" class="tooltip-img"/></span>
       </h2>
-      <!-- Icono de galería -->
-      <button id="btn-gallery" class="gallery-icon" title="Abrir galería">
-        <img src="/images/galeria.png" alt="Galería" />
-      </button>
+      <button id="btn-gallery" class="gallery-icon" title="Abrir galería"><img src="/images/galeria.png" alt="Galería"/></button>
     </div>
 
-    <!-- Switch Sistema Completo -->
     <div class="system-switch">
-      <label class="switch">
-        <input type="checkbox" id="system-toggle">
-        <span class="slider"></span>
-      </label>
+      <label class="switch"><input type="checkbox" id="system-toggle"><span class="slider"></span></label>
       <span id="system-label">Sistema: On</span>
     </div>
 
-    <!-- Switch Sensor Cámara/Movimiento -->
     <div class="sensor-switch" id="cam-motion-switch-container">
-      <label class="switch">
-        <input type="checkbox" id="cam-motion-toggle">
-        <span class="slider"></span>
-      </label>
+      <label class="switch"><input type="checkbox" id="cam-motion-toggle"><span class="slider"></span></label>
       <span id="cam-motion-label">Cámara/Movimiento: On</span>
     </div>
+
+        <section class="realtime">
+      <h2>Datos en tiempo real</h2>
+      <div class="rt-box">
+        <p><strong>Hora:</strong> <span id="rt-hour">–</span></p>
+        <p><strong>Movimiento:</strong> <span id="rt-value">–</span></p>
+      </div>
+      <div class="actions">
+        <button id="btn-stats">Ver Datos Históricos</button>
+      </div>
+    </section>
 
     <section class="monitoring">
       <h2>Monitoreo de Sensor</h2>
@@ -100,61 +87,31 @@
         <div class="display-container">
           <canvas id="camMotionChart"></canvas>
           <table id="camMotionTable" class="hidden">
-            <thead>
-              <tr>
-                <th>Hora</th>
-                <th>Detectado</th>
-                <th>Intensidad</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Hora</th><th>Detectado</th><th>Intensidad</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <section class="realtime">
-      <h2>Datos en tiempo real</h2>
-      <div class="rt-box">
-        <p><strong>Hora:</strong> <span id="rt-hour">–</span></p>
-        <p><strong>Movimiento:</strong> <span id="rt-value">–</span></p>
-      </div>
-      <div class="actions">
-        <button id="btn-stats">Ver Datos Históricos</button>
-      </div>
-    </section>
 
   </main>
 
-  <!-- Botón SOS -->
-  <button id="btn-sos" class="sos-button">
-    <img src="/images/sos.png" alt="SOS"/>
-  </button>
+  <button id="btn-sos" class="sos-button"><img src="/images/sos.png" alt="SOS"/></button>
   <div id="modal-sos" class="sos-modal hidden">
     <div class="sos-content">
-      <h4>Emergencias</h4>
+      <h3>Emergencias</h3>
       <div class="sos-cards">
-        <div class="sos-card">
-          <img class="icon-placeholder" src="/images/sirena.png" alt="">
-          <p>Bomberos<br><strong>123</strong></p>
-        </div>
-        <div class="sos-card">
-          <img class="icon-placeholder" src="/images/poli.png" alt="">
-          <p>Policía<br><strong>456</strong></p>
-        </div>
-        <div class="sos-card">
-          <img class="icon-placeholder" src="/images/ambulancia.png" alt="">
-          <p>Ambulancia<br><strong>789</strong></p>
-        </div>
+        <div class="sos-card"><img src="/images/sirena.png"><p>Bomberos<br><strong>123</strong></p></div>
+        <div class="sos-card"><img src="/images/poli.png"><p>Policía<br><strong>456</strong></p></div>
+        <div class="sos-card"><img src="/images/ambulancia.png"><p>Ambulancia<br><strong>789</strong></p></div>
       </div>
       <button id="close-sos" class="close-sos">✕</button>
     </div>
   </div>
 
-  <!-- Sonido de alerta -->
   <audio id="alert-sound" src="/audio/notification.mp3" preload="auto"></audio>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script type="module" src="/src/js/views/camMotionSensors.js"></script>
   <script type="module" src="/src/js/router.js"></script>

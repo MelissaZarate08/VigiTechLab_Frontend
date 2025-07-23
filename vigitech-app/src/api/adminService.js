@@ -1,7 +1,5 @@
-// src/api/adminService.js
-const BASE_URL = 'http://localhost:8080/api'; // coincide con logeoService
+const BASE_URL = 'http://vigitech-auth.namixcode.cc:8080/api';
 
-/** Trae todos los usuarios (sin incluir admins) */
 export async function fetchAllUsers() {
   const token = localStorage.getItem('authToken');
   const res = await fetch(`${BASE_URL}/users`, {
@@ -18,7 +16,6 @@ export async function fetchAllUsers() {
   return users;
 }
 
-/** Actualiza el campo active del usuario */
 export async function updateUserStatus(id, active) {
   const token = localStorage.getItem('authToken');
   const res = await fetch(`${BASE_URL}/users/${id}/status`, {

@@ -1,24 +1,19 @@
-// File: src/js/views/dashboard.js
-
 import Toastify from 'toastify-js';
 import { navigateTo } from '../router.js';
-import { initWebSocket } from '../../api/dashboardService.js';
+import { initWebSocket } from '../../api/wsService.js';
 
-const BASE_URL = "http://192.168.115.1:8081";
+const BASE_URL = "http://vigitech-data.namixcode.cc:8081";
 const POLL_MS  = 1000;
 
 export function initDashboard() {
-  // 1) Menú y navegación
-  const btnMenu   = document.getElementById('btn-menu');
-  const btnClose  = document.getElementById('btn-close');
-  const sidebar   = document.getElementById('sidebar');
+  const btnMenu  = document.getElementById('btn-menu');
+  const btnClose = document.getElementById('btn-close');
+  const sidebar  = document.getElementById('sidebar');
   btnMenu.addEventListener('click',  () => sidebar.classList.add('visible'));
   btnClose.addEventListener('click', () => sidebar.classList.remove('visible'));
 
-  // Usuario y logout
-  const btnUser  = document.getElementById('btn-user');
-  const dropdown = document.getElementById('dropdown-user');
-  btnUser.addEventListener('click', () => dropdown.classList.toggle('hidden'));
+  document.getElementById('btn-user')
+    .addEventListener('click', () => document.getElementById('dropdown-user').classList.toggle('hidden'));
   document.getElementById('logout')
     .addEventListener('click', () => {
       localStorage.removeItem('authToken');
@@ -31,7 +26,6 @@ export function initDashboard() {
   document.getElementById('user-name').textContent    = name;
   document.getElementById('welcome-name').textContent = name;
 
-  // Sidebar activo
   document.querySelectorAll('.menu a').forEach(a => {
     if (a.getAttribute('href') === '#/dashboard') a.classList.add('active');
     a.addEventListener('click', e => {
@@ -41,9 +35,8 @@ export function initDashboard() {
     });
   });
   document.getElementById('toggle-sensors')
-    .addEventListener('click', e => e.target.parentElement.classList.toggle('open'));
+          .addEventListener('click', e => e.target.parentElement.classList.toggle('open'));
 
-  // 2) Audio y sonido de alerta
   const alertSound = document.getElementById('alert-sound');
   let audioReady = false;
   document.addEventListener('click', () => {
@@ -54,127 +47,125 @@ export function initDashboard() {
     }
   }, { once: true });
 
-  // 3) Umbrales y flags de alerta
   const THRESHOLDS = {
-    gas:      { LPG: 1000, CO: 50, Smoke: 50 },
-    particle: { PM1_0: 12, PM2_5: 35, PM10: 50 },
+    gas:      { LPG:1000, CO:50, Smoke:50 },
+    particle: { PM1_0:12, PM2_5:35, PM10:50 },
     motion:   {}
   };
   let alerted = { gas:false, particle:false, motion:false };
 
-  // 4) Variables WS y polling
-  let ws, pollingId;
-
+  let wsClient, pollingId;
   function startRealtime() {
-    ws = initWebSocket(onData);
+    wsClient   = initWebSocket(onData);
     fetchLatestFrame();
-    pollingId = setInterval(fetchLatestFrame, POLL_MS);
+    pollingId  = setInterval(fetchLatestFrame, POLL_MS);
   }
-
   function stopRealtime() {
-    if (ws) ws.close();
+    wsClient?.close();
     clearInterval(pollingId);
   }
 
-function onData(data) {
-  if (localStorage.getItem('vigitech-system') !== 'on') return;
+  function onData(data) {
+    if (localStorage.getItem('vigitech-system') !== 'on') return;
 
-  const sensorStates = {
-    gas:      localStorage.getItem('vigitech-gas') === 'on',
-    particle: localStorage.getItem('vigitech-particle') === 'on',
-    motion:   localStorage.getItem('vigitech-motion') === 'on',
-  };
+    const gasEl    = document.getElementById('gas-status'),
+          partEl   = document.getElementById('particle-status'),
+          motionEl = document.getElementById('motion-status');
+    if (!gasEl || !partEl || !motionEl) return;
 
-  // Control de cooldown por sensor apagado
-  const now = Date.now();
-  const alertCooldown = 5000; // 2 segundos
-  const lastOffAlerts = {
-    gas:      parseInt(localStorage.getItem('vigitech-alert-gas'))      || 0,
-    particle: parseInt(localStorage.getItem('vigitech-alert-particle')) || 0,
-    motion:   parseInt(localStorage.getItem('vigitech-alert-motion'))   || 0,
-  };
+    const states = {
+      gas:      localStorage.getItem('vigitech-gas') === 'on',
+      particle: localStorage.getItem('vigitech-particle') === 'on',
+      motion:   localStorage.getItem('vigitech-motion') === 'on'
+    };
 
-  function showSensorOffToast(sensorKey, msg) {
-    if (now - lastOffAlerts[sensorKey] > alertCooldown) {
-      Toastify({ text: msg, duration: 4000, gravity: "top", position: "right", style: { background: "#999" } }).showToast();
-      localStorage.setItem(`vigitech-alert-${sensorKey}`, now);
+    const now      = Date.now(),
+          cooldown = 5000;
+    const last = {
+      gas:      +localStorage.getItem('vigitech-alert-gas')      || 0,
+      particle: +localStorage.getItem('vigitech-alert-particle') || 0,
+      motion:   +localStorage.getItem('vigitech-alert-motion')   || 0,
+    };
+    function offToast(key, msg) {
+      if (now - last[key] > cooldown) {
+        Toastify({ text: msg, duration:4000, gravity:"top", position:"right", style:{background:"#999"} }).showToast();
+        localStorage.setItem(`vigitech-alert-${key}`, now);
+      }
+    }
+
+    // — GAS —
+    if (data.id?.startsWith('g-')) {
+      if (!states.gas) { offToast('gas', "Sensor de gas está apagado"); return; }
+      gasEl.innerHTML = `<strong>Gas:</strong><br>LPG: ${data.lpg}<br>CO: ${data.co}<br>Humo: ${data.smoke}`;
+      const alarm = data.lpg > THRESHOLDS.gas.LPG || data.co > THRESHOLDS.gas.CO || data.smoke > THRESHOLDS.gas.Smoke;
+      if (alarm && !alerted.gas) {
+        alerted.gas = true;
+        if (audioReady) { alertSound.currentTime = 0; alertSound.play().catch(() => {}); }
+        Toastify({ text:"Alerta de gas alto", duration:5000, gravity:"top", position:"right", style:{background:"#e63946"} }).showToast();
+      }
+      if (!alarm) alerted.gas = false;
+    }
+
+    if (data.id?.startsWith('p-')) {
+      if (!states.particle) { offToast('particle', "Sensor de partículas está apagado"); return; }
+      partEl.innerHTML = `<strong>Partículas:</strong><br>PM1.0: ${data.pm1_0}<br>PM2.5: ${data.pm2_5}<br>PM10: ${data.pm10}`;
+      const alarm = data.pm1_0 > THRESHOLDS.particle.PM1_0
+                 || data.pm2_5 > THRESHOLDS.particle.PM2_5
+                 || data.pm10  > THRESHOLDS.particle.PM10;
+      if (alarm && !alerted.particle) {
+        alerted.particle = true;
+        if (audioReady) { alertSound.currentTime = 0; alertSound.play().catch(() => {}); }
+        Toastify({ text:"Alerta de partículas alto", duration:5000, gravity:"top", position:"right", style:{background:"#e63946"} }).showToast();
+      }
+      if (!alarm) alerted.particle = false;
+    }
+
+    if (data.id?.startsWith('motion')) {
+      if (!states.motion) { offToast('motion', "Sensor de movimiento está apagado"); return; }
+      const estado = data.motion_detected ? 'Detectado' : 'Sin movimiento';
+      motionEl.innerHTML = `<strong>Movimiento:</strong><br>Estado: ${estado}<br>Intensidad: ${data.intensity ?? '–'}`;
+      if (data.motion_detected && !alerted.motion) {
+        alerted.motion = true;
+        if (audioReady) { alertSound.currentTime = 0; alertSound.play().catch(() => {}); }
+        Toastify({ text:"Se detectó movimiento", duration:5000, gravity:"top", position:"right", style:{background:"#e63946"} }).showToast();
+      }
+      if (!data.motion_detected) alerted.motion = false;
     }
   }
 
-  // GAS
-  if (data.id?.startsWith('g-')) {
-    if (!sensorStates.gas) {
-      showSensorOffToast('gas', "Sensor de gas está apagado");
-      return;
-    }
-
-    document.getElementById('gas-status').innerHTML =
-      `<strong>Gas:</strong><br>LPG: ${data.lpg}<br>CO: ${data.co}<br>Humo: ${data.smoke}`;
-    const gasAlarm = data.lpg > THRESHOLDS.gas.LPG || data.co > THRESHOLDS.gas.CO || data.smoke > THRESHOLDS.gas.Smoke;
-    if (gasAlarm && !alerted.gas) {
-      alerted.gas = true;
-      if (audioReady) { alertSound.currentTime = 0; alertSound.play().catch(() => {}); }
-      Toastify({ text: "Alerta de gas alto", duration: 5000, gravity: "top", position: "right", style: { background: "#e63946" } }).showToast();
-    }
-    if (!gasAlarm) alerted.gas = false;
-  }
-
-  // PARTÍCULAS
-  if (data.id?.startsWith('p-')) {
-    if (!sensorStates.particle) {
-      showSensorOffToast('particle', "Sensor de partículas está apagado");
-      return;
-    }
-
-    document.getElementById('particle-status').innerHTML =
-      `<strong>Partículas:</strong><br>PM1.0: ${data.pm1_0}<br>PM2.5: ${data.pm2_5}<br>PM10: ${data.pm10}`;
-    const partAlarm = data.pm1_0 > THRESHOLDS.particle.PM1_0 || data.pm2_5 > THRESHOLDS.particle.PM2_5 || data.pm10 > THRESHOLDS.particle.PM10;
-    if (partAlarm && !alerted.particle) {
-      alerted.particle = true;
-      if (audioReady) { alertSound.currentTime = 0; alertSound.play().catch(() => {}); }
-      Toastify({ text: "Alerta de partículas alto", duration: 5000, gravity: "top", position: "right", style: { background: "#e63946" } }).showToast();
-    }
-    if (!partAlarm) alerted.particle = false;
-  }
-
-  // MOVIMIENTO
-  if (data.id?.startsWith('motion')) {
-    if (!sensorStates.motion) {
-      showSensorOffToast('motion', "Sensor de movimiento está apagado");
-      return;
-    }
-
-    const estado = data.motion_detected ? 'Detectado' : 'Sin movimiento';
-    document.getElementById('motion-status').innerHTML =
-      `<strong>Movimiento:</strong><br>Estado: ${estado}<br>Intensidad: ${data.intensity ?? '–'}`;
-    const motionAlarm = data.motion_detected;
-    if (motionAlarm && !alerted.motion) {
-      alerted.motion = true;
-      if (audioReady) { alertSound.currentTime = 0; alertSound.play().catch(() => {}); }
-      Toastify({ text: "Se detectó movimiento", duration: 5000, gravity: "top", position: "right", style: { background: "#e63946" } }).showToast();
-    }
-    if (!motionAlarm) alerted.motion = false;
-  }
-}
-
-
-
-  // 6) Cámara polling
   const streamImg = document.getElementById('camera-stream');
   async function fetchLatestFrame() {
     if (localStorage.getItem('vigitech-system') !== 'on') return;
     try {
       const res = await fetch(`${BASE_URL}/sensor/stream?limit=1`);
       const arr = await res.json();
-      if (arr.length) {
+      if (arr.length && streamImg) {
         streamImg.src = `${arr[0].image_path}?t=${Date.now()}`;
       }
-    } catch {};
+    } catch {}
   }
 
-  // 7) Switch de sistema
-  const systemToggle = document.getElementById('system-toggle');
-  const systemLabel  = document.getElementById('system-label');
+  const offToastVisible = { gas: false, particle: false, motion: false };
+  const ALERT_COOLDOWN = 5000; // ms
+
+  function showSensorOffToast(sensorKey, msg) {
+    if (offToastVisible[sensorKey]) return;
+    offToastVisible[sensorKey] = true;
+    Toastify({
+      text: msg,
+      duration: 4000,
+      gravity: "top",
+      position: "right",
+      style: { background: "#999" },
+      onHide: () => setTimeout(() => {
+        offToastVisible[sensorKey] = false;
+      }, ALERT_COOLDOWN)
+    }).showToast();
+  }
+
+
+  const systemToggle = document.getElementById('system-toggle'),
+        systemLabel  = document.getElementById('system-label');
   let sysState = localStorage.getItem('vigitech-system') || 'on';
   systemToggle.checked = sysState === 'on';
   systemLabel.textContent = `Sistema: ${sysState.toUpperCase()}`;
@@ -188,12 +179,15 @@ function onData(data) {
       });
       localStorage.setItem('vigitech-system', state);
       systemLabel.textContent = `Sistema: ${state.toUpperCase()}`;
-      Toastify({ text: `Sistema ${state==='on'? 'encendido':'apagado'}`, duration: 3000, gravity: "top", position: "right", style: { background: state==='on'? "#4caf50":"#e63946" } }).showToast();
-      
+      Toastify({
+        text: `Sistema ${state==='on'?'encendido':'apagado'}`,
+        duration:3000, gravity:"top", position:"right",
+        style:{ background: state==='on'? "#4caf50":"#e63946" }
+      }).showToast();
+
       if (state === 'off') {
         stopRealtime();
       } else {
-        // Al reactivar, resetear flags de alerta y reiniciar realtime
         alerted = { gas:false, particle:false, motion:false };
         startRealtime();
       }
@@ -203,14 +197,11 @@ function onData(data) {
   }
   systemToggle.addEventListener('change', e => setSystem(e.target.checked ? 'on' : 'off'));
 
-  // 8) Iniciar por primera vez
   startRealtime();
 
-  // 9) SOS y bloqueo de atrás
-  document.getElementById('btn-sos')
-    .addEventListener('click', () => document.getElementById('modal-sos').classList.remove('hidden'));
-  document.getElementById('close-sos')
-    .addEventListener('click', () => document.getElementById('modal-sos').classList.add('hidden'));
-  history.pushState(null, null, location.href);
-  window.addEventListener('popstate', () => history.pushState(null, null, location.href));
+ const sosModal = document.getElementById('modal-sos');
+ document.getElementById('btn-sos').onclick = () => sosModal.classList.toggle('hidden');
+
+  history.pushState(null,null,location.href);
+  window.addEventListener('popstate', ()=> history.pushState(null,null,location.href));
 }

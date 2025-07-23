@@ -1,5 +1,4 @@
-// src/api/galeriaService.js
-const API_BASE = 'http://192.168.115.1:8081';
+const API_BASE = 'http://vigitech-data.namixcode.cc:8081';
 
 export async function fetchGallery() {
   try {

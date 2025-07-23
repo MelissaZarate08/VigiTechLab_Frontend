@@ -1,7 +1,5 @@
-/* Reset básico */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Variables */
 :root {
   --primary: #002658;
   --light-bg: #f5f7fa;
@@ -9,7 +7,6 @@
   --accent: #BAD8FF;
 }
 
-/* BODY y HEADER */
 body {
   font-family: 'Roboto', sans-serif;
   background: var(--light-bg);
@@ -33,7 +30,6 @@ body {
   cursor: pointer;
 }
 
-/* CONTENEDOR PRINCIPAL */
 .prob-container {
   padding: 2rem 1rem;
   max-width: 900px;
@@ -46,7 +42,6 @@ body {
 }
 .sensor-type { font-size: 1.2rem; color: #555; }
 
-/* FILTROS */
 .filter {
   display: inline-flex;
   align-items: center;
@@ -68,7 +63,6 @@ body {
   width: 32px; height: 32px;
 }
 
-/* SECTION RESULTS dinámico */
 .results {
   display: none;
   flex-direction: column;
@@ -77,7 +71,6 @@ body {
   opacity: 0;
 }
 
-/* Cada bloque de métrica */
 .metric-block {
   display: flex;
   flex-wrap: wrap;
@@ -103,7 +96,6 @@ body {
   height: auto !important;
 }
 
-/* ESTILOS DE LAS TARJETAS DE ESTADÍSTICAS */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
