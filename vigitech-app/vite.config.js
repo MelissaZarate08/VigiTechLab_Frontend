@@ -1,11 +1,20 @@
 import { defineConfig } from 'vite'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export default defineConfig({
-  base: '/',             // Ruta base de tu aplicación
-  publicDir: 'public',   // Carpeta de archivos estáticos
+  base: '/',
+  publicDir: 'public',
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        { src: 'src/css',   dest: 'src' },
+        { src: 'src/views', dest: 'src' }
+      ]
+    })
+  ],
   build: {
-    outDir: 'dist',      // Carpeta resultante tras build
-    assetsDir: 'assets', // Subcarpeta para JS/CSS/imágenes con hash
-    emptyOutDir: true    // Limpia dist antes de generar
+    outDir: 'dist',
+    assetsDir: 'assets',
+    emptyOutDir: true
   }
 })
