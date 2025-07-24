@@ -1,4 +1,14 @@
-<main class="view-dashboard">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VigiTech – Sensor de Gas</title>
+  <link rel="stylesheet" href="/src/css/gasSensor.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body class="view-dashboard">
+
   <header>
     <div class="header-left">
       <button id="btn-menu" class="hamburger-open">☰</button>
@@ -33,12 +43,12 @@
     </div>
   </nav>
 
-  <section class="dashboard-content">
+  <main class="dashboard-content">
     <h1 class="sensor-title">
       Sensor de Gas <span class="sensor-model">(MQ-2)</span>
       <span class="icon-tooltip">
-        <img src="/images/imagen.png" class="icon-img"/>
-        <img src="/images/sensorgas.png" class="tooltip-img"/>
+        <img src="/images/imagen.png" alt="Información" class="icon-img" />
+        <img src="/images/sensorgas.png" alt="MQ-2" class="tooltip-img"/>
       </span>
     </h1>
 
@@ -58,17 +68,17 @@
       <span id="gas-label">Gas: On</span>
     </div>
 
-    <section class="realtime">
-      <h2>Datos en tiempo real</h2>
-      <div class="rt-boxes">
-        <div class="rt-box"><p><strong>LPG:</strong> <span id="rt-lpg">–</span> ppm</p></div>
-        <div class="rt-box"><p><strong>CO:</strong> <span id="rt-co">–</span> ppm</p></div>
-        <div class="rt-box"><p><strong>Smoke:</strong> <span id="rt-smoke">–</span> ppm</p></div>
-      </div>
-      <div class="actions">
-        <button id="btn-stats">Ver Datos Históricos</button>
-      </div>
-    </section>
+  <section class="realtime">
+  <h2>Datos en tiempo real</h2>
+  <div class="rt-boxes">
+    <div class="rt-box"><p><strong>LPG:</strong> <span id="rt-lpg">–</span> ppm</p></div>
+    <div class="rt-box"><p><strong>CO:</strong> <span id="rt-co">–</span> ppm</p></div>
+    <div class="rt-box"><p><strong>Smoke:</strong> <span id="rt-smoke">–</span> ppm</p></div>
+  </div>
+  <div class="actions">
+    <button id="btn-stats">Ver Datos Históricos</button>
+  </div>
+</section>
 
     <section class="monitoring">
       <h2>Monitoreo de Sensor</h2>
@@ -77,33 +87,39 @@
         <button id="btn-table">Tabla</button>
       </div>
       <div class="data-display">
-        <canvas id="gasChart"></canvas>
-        <table id="gasTable" class="hidden">
-          <thead>
-            <tr>
-              <th>Hora</th><th>LPG</th><th>CO</th><th>Humo</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="display-container">
+          <canvas id="gasChart"></canvas>
+          <table id="gasTable" class="hidden">
+            <thead>
+              <tr>
+                <th>Tiempo</th>
+                <th>LPG (ppm)</th>
+                <th>CO (ppm)</th>
+                <th>Smoke (ppm)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </section>
-  </section>
 
-  <button id="btn-sos" class="sos-button">
-    <img src="/images/sos.png" alt="SOS"/>
-  </button>
-  <div id="modal-sos" class="sos-modal hidden">
-    <div class="sos-content">
-      <h3>Emergencias</h3>
-      <div class="sos-cards">
+
+<button id="btn-sos" class="sos-button"><img src="/images/sos.png" alt="SOS"/></button>
+<div id="modal-sos" class="sos-modal hidden">
+  <div class="sos-content">
+    <h3>Emergencias</h3>
+    <div class="sos-cards">
         <div class="sos-card"><img src="/images/sirena.png"><p>Bomberos<br><strong>123</strong></p></div>
         <div class="sos-card"><img src="/images/poli.png"><p>Policía<br><strong>456</strong></p></div>
         <div class="sos-card"><img src="/images/ambulancia.png"><p>Ambulancia<br><strong>789</strong></p></div>
-      </div>
-      <button id="close-sos" class="close-sos">✕</button>
     </div>
+    <button id="close-sos" class="close-sos">✕</button>
   </div>
+</div>
 
   <audio id="alert-sound" src="/audio/notification.mp3" preload="auto"></audio>
-</main>
+
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</body>
+</html>
