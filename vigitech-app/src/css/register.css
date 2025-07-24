@@ -17,7 +17,7 @@ body {
 
 .register-image {
   flex: 2;
-  background: url('../../public/images/labRegister.jpg') center/cover no-repeat;
+  background: url('/images/labRegister.jpg') center/cover no-repeat;
 }
 
 .register-card {
