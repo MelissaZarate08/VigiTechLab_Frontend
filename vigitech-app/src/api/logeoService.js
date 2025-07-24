@@ -1,4 +1,4 @@
-const BASE_URL = 'http://vigitech-auth.namixcode.cc:8080/api';
+const BASE_URL = 'https://vigitech-auth.namixcode.cc/api';
 
 export async function registerUser({ name, email, password, role, id_Sistema }) {
   console.log('Register payload:', { name, email, password, role, id_Sistema });
