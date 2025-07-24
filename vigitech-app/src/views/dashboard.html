@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>VigiTech – Dashboard</title>
-  <link rel="stylesheet" href="/src/css/dashboard.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-</head>
-<body class="view-dashboard">
-
+<main class="view-dashboard">
   <header>
     <div class="header-left">
       <button id="btn-menu" class="hamburger-open">☰</button>
@@ -43,8 +33,7 @@
     </div>
   </nav>
 
-  <main class="dashboard-content">
-
+  <section class="dashboard-content">
     <h1>Bienvenido, <span id="welcome-name">Usuario</span></h1>
 
     <div class="system-switch">
@@ -70,9 +59,11 @@
         <img id="camera-stream" src="" alt="Live stream" />
       </div>
     </section>
-  </main>
+  </section>
 
-  <button id="btn-sos" class="sos-button"><img src="/images/sos.png" alt="SOS"></button>
+  <button id="btn-sos" class="sos-button">
+    <img src="/images/sos.png" alt="SOS">
+  </button>
   <div id="modal-sos" class="sos-modal hidden">
     <div class="sos-content">
       <h4>Emergencias</h4>
@@ -95,6 +86,4 @@
   </div>
 
   <audio id="alert-sound" src="/audio/notification.mp3" preload="auto"></audio>
-  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-</body>
-</html>
+</main>
