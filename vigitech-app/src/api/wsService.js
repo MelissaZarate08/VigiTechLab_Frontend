@@ -1,4 +1,4 @@
-const WS_URL = "ws://vigitech-ws.namixcode.cc/ws";
+const WS_URL = "wss://vigitech-ws.namixcode.cc/ws";
 const RECONNECT_DELAY = 3000;
 
 export function initWebSocket(callback) {

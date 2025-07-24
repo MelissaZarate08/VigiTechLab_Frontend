@@ -202,6 +202,10 @@ export function initDashboard() {
  const sosModal = document.getElementById('modal-sos');
  document.getElementById('btn-sos').onclick = () => sosModal.classList.toggle('hidden');
 
+ document.getElementById('close-sos').onclick = () => {
+  document.getElementById('modal-sos').classList.add('hidden');
+};
+
   history.pushState(null,null,location.href);
   window.addEventListener('popstate', ()=> history.pushState(null,null,location.href));
 }
