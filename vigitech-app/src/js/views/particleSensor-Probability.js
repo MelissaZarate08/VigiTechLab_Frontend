@@ -6,7 +6,7 @@ const resultsSection = document.getElementById("results");
 const downloadBtn    = document.getElementById("downloadBtn");
 const backBtn        = document.getElementById("backBtn");
 
-const API_BASE = "http://vigitech-analisis.namixcode.cc:8000/particle";
+const API_BASE = "https://vigitech-analisis.namixcode.cc/particle";
 
 periodFilter.addEventListener("change", () => loadReport(periodFilter.value));
 downloadBtn.addEventListener("click", () => {

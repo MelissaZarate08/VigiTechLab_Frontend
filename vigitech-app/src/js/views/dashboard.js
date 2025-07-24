@@ -2,7 +2,7 @@ import Toastify from 'toastify-js';
 import { navigateTo } from '../router.js';
 import { initWebSocket } from '../../api/wsService.js';
 
-const BASE_URL = "http://vigitech-data.namixcode.cc:8081";
+const BASE_URL = "https://vigitech-data.namixcode.cc";
 const POLL_MS  = 1000;
 
 export function initDashboard() {
